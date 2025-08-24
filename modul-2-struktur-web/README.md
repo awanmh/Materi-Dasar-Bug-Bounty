@@ -33,9 +33,9 @@ Ketika sebuah aplikasi gagal membersihkan input pengguna dengan benar dan memasu
 Contoh sederhana:
 
 HTML
-
+```
 \<div\>Selamat datang, \<script\>alert('XSS')\</script\>\!\</div\>
-
+```
 Jika aplikasi merender ini secara langsung, browser akan mengeksekusi kode di dalam tag \<script\>, memunculkan kotak peringatan. Ini adalah bukti konsep (PoC) klasik untuk Cross-Site Scripting (XSS).8 Meskipun
 
 alert() itu sendiri tidak berbahaya, itu membuktikan bahwa penyerang dapat menjalankan JavaScript sewenang-wenang di browser korban, yang dapat digunakan untuk mencuri *cookie* sesi, merekam ketikan keyboard, atau memanipulasi konten halaman.
@@ -67,8 +67,9 @@ Ketika browser memuat halaman web, ia membuat model terstruktur dari dokumen ter
 Contoh payload XSS yang menggunakan *event handler* onerror:
 
 HTML
-
+```
 \<img src\="x" onerror\="alert('XSS')"\>
+```
 
 Browser akan mencoba memuat gambar dari sumber yang tidak valid (x), yang akan memicu *event* onerror, dan kemudian mengeksekusi kode JavaScript yang ditentukan.
 
@@ -104,21 +105,26 @@ Di balik sebagian besar aplikasi web, terdapat sebuah database yang menyimpan se
 Sebagai seorang *bug hunter*, Anda tidak perlu menjadi seorang administrator database, tetapi Anda harus memahami konsep dasar dari query SQL, terutama yang berkaitan dengan manipulasi data (DML \- Data Manipulation Language).
 
 * **SELECT:** Perintah untuk **membaca** atau mengambil data. Ini adalah perintah yang paling umum.  
-  SQL  
+  SQL
+  ```  
   SELECT username, email FROM users WHERE user\_id \= 1;
-
+  ```
 * **INSERT:** Perintah untuk **membuat** atau menambahkan data baru.  
-  SQL  
+  SQL
+  ```  
   INSERT INTO users (username, password) VALUES ('hunter', 'pa$$w0rd');
-
+  ```
 * **UPDATE:** Perintah untuk **memperbarui** data yang sudah ada.  
-  SQL  
+  SQL
+  ```  
   UPDATE users SET password \= 'new\_password' WHERE username \= 'hunter';
-
+  ```
 * **DELETE:** Perintah untuk **menghapus** data.  
-  SQL  
+  SQL
+  ```  
   DELETE FROM users WHERE username \= 'hunter';
-
+  ```
+  
 Penting untuk memahami bahwa input dari pengguna (misalnya, dari formulir login atau bilah pencarian) seringkali digunakan untuk membangun query-query ini secara dinamis di *backend*. Jika input ini tidak ditangani dengan hati-hati, penyerang dapat menyisipkan sintaks SQL mereka sendiri untuk memanipulasi query asli. Ini adalah dasar dari kerentanan **SQL Injection**, yang akan dibahas secara mendalam di modul berikutnya.
 
 ---
