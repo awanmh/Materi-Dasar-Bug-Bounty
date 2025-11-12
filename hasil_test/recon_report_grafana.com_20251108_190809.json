@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "target": "grafana.com",
+    "scan_date": "2025-11-08T19:08:09.924776",
+    "version": "12.0",
+    "waf_detected": []
+  },
+  "summary": {
+    "live_hosts": 2,
+    "endpoints_found": 2,
+    "params_get_found": 0,
+    "params_post_found": 0,
+    "verified_issues": 2
+  },
+  "data": {
+    "live_hosts": [
+      "https://www.grafana.com",
+      "https://grafana.com"
+    ],
+    "endpoints": {
+      "grafana.com": [
+        "https://grafana.com"
+      ],
+      "www.grafana.com": [
+        "https://www.grafana.com"
+      ]
+    },
+    "parameters_get": {},
+    "parameters_post": {},
+    "evidence": {
+      "csrf-token-extraction": [
+        {
+          "type": "csrf-token-extraction",
+          "location": "https://grafana.com",
+          "evidence": {
+            "template_id": "csrf-token-extraction",
+            "target": {
+              "base_url": "https://grafana.com"
+            },
+            "color_severity": "\u001b[92mINFO\u001b[0m"
+          },
+          "severity": "info",
+          "timestamp": "2025-11-08T19:08:06.318917",
+          "verified": true
+        },
+        {
+          "type": "csrf-token-extraction",
+          "location": "https://www.grafana.com",
+          "evidence": {
+            "template_id": "csrf-token-extraction",
+            "target": {
+              "base_url": "https://www.grafana.com"
+            },
+            "color_severity": "\u001b[92mINFO\u001b[0m"
+          },
+          "severity": "info",
+          "timestamp": "2025-11-08T19:08:06.810894",
+          "verified": true
+        }
+      ]
+    }
+  }
+}

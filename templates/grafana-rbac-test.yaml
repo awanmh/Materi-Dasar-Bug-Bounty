@@ -1,0 +1,26 @@
+id: grafana-viewer-admin-access
+info:
+  name: "Viewer Role can access Admin API settings"
+  severity: "high"
+target: "host" # Akan berjalan di host yang kita tentukan
+requests:
+  - method: "GET"
+    # Path ini seharusnya HANYA bisa diakses oleh Admin
+    path: "{{base_url}}/api/admin/settings"
+    
+    matchers_condition: "and"
+    matchers:
+      # 1. Kita mencari respons SUKSES
+      # (Jika 403 Forbidden, matcher ini akan gagal, dan itu bagus)
+      - type: "status"
+        status: 200
+        
+      # 2. DAN kita pastikan kita melihat konten JSON admin
+      # (bukan halaman 'Access Denied' yang mungkin 200 OK)
+      - type: "word"
+        part: "body"
+        words:
+          - "analytics"
+          - "google_analytics"
+          - "smtp"
+        condition: "or"

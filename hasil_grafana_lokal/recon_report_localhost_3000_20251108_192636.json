@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "target": "localhost:3000",
+    "scan_date": "2025-11-08T19:26:36.986385",
+    "version": "12.2",
+    "waf_detected": []
+  },
+  "summary": {
+    "live_hosts": 1,
+    "endpoints_found": 1,
+    "params_get_found": 0,
+    "params_post_found": 0,
+    "verified_issues": 1
+  },
+  "data": {
+    "live_hosts": [
+      "http://localhost:3000"
+    ],
+    "endpoints": {
+      "localhost:3000": [
+        "http://localhost:3000"
+      ]
+    },
+    "parameters_get": {},
+    "parameters_post": {},
+    "evidence": {
+      "csrf-token-extraction": [
+        {
+          "type": "csrf-token-extraction",
+          "location": "http://localhost:3000",
+          "evidence": {
+            "template_id": "csrf-token-extraction",
+            "target": {
+              "base_url": "http://localhost:3000"
+            },
+            "color_severity": "\u001b[92mINFO\u001b[0m"
+          },
+          "severity": "info",
+          "timestamp": "2025-11-08T19:26:36.952238",
+          "verified": true
+        }
+      ]
+    }
+  }
+}

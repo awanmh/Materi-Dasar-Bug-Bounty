@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "target": "gojekapi.com",
+    "scan_date": "2025-11-12T15:58:19.865370",
+    "version": "12.2",
+    "waf_detected": []
+  },
+  "summary": {
+    "live_hosts": 1,
+    "endpoints_found": 2,
+    "params_get_found": 0,
+    "params_post_found": 0,
+    "verified_issues": 0
+  },
+  "data": {
+    "live_hosts": [
+      "https://api.gojekapi.com"
+    ],
+    "endpoints": {
+      "api.gojekapi.com": [
+        "https://api.gojekapi.com/index.html",
+        "https://api.gojekapi.com"
+      ]
+    },
+    "parameters_get": {},
+    "parameters_post": {},
+    "evidence": {}
+  }
+}
