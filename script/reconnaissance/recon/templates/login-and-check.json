@@ -1,0 +1,48 @@
+{
+  "id": "login-chain-example",
+  "info": {
+    "name": "Login Chain & Variable Test",
+    "severity": "info"
+  },
+  "target": "host",
+  "requests": [
+    {
+      "method": "GET",
+      "path": "{{base_url}}/login",
+      "matchers": [
+        { "type": "status", "status": 200 }
+      ],
+      "extractors": [
+        {
+          "type": "regex",
+          "part": "body",
+          "regex": "name=\"_token\" value=\"(.*?)\"",
+          "name": "csrf_token"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "{{base_url}}/login",
+      "body": "_token={{csrf_token}}&username=admin&password=wrongpassword",
+      "matchers": [
+        {
+          "type": "status",
+          "status": 302
+        },
+        {
+          "type": "header",
+          "part": "location",
+          "words": ["/dashboard"],
+          "condition": "or"
+        },
+        {
+          "type": "word",
+          "part": "body",
+          "words": ["Invalid credentials"],
+          "condition": "or"
+        }
+      ]
+    }
+  ]
+}

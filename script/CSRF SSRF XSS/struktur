@@ -1,0 +1,27 @@
+scanner-v7/
+├── .gitignore               # Mengabaikan file yang tidak perlu (seperti __pycache__)
+├── docker-compose.yml       # Mendefinisikan & menghubungkan scanner + Selenium Grid
+├── Dockerfile               # Membuat image container untuk aplikasi scanner
+├── README.md                # Dokumentasi proyek (cara build, cara run)
+├── requirements.txt         # Daftar semua dependensi Python (requests, selenium, dll.)
+├── scanner_v7.py            # Titik masuk utama (Entrypoint). Memuat & menjalankan semua manajer.
+|
+├── core/                    # [INTI] Berisi semua logika orkestrasi & manajer.
+│   ├── __init__.py          # Menjadikan 'core' sebagai modul Python
+│   ├── crawler.py           # (Fase 1) Logika untuk crawling & menemukan vektor serangan
+│   ├── dom_manager.py       # (Fase 2) Mengelola pool worker Selenium & antrian DOM
+│   ├── oast.py              # Manajer untuk berinteraksi dengan Interact.sh (SSRF, dll.)
+│   ├── plugin_base.py       # [PENTING] Interface (Base Class) yang harus diikuti semua plugin
+│   ├── plugin_loader.py     # Logika untuk mencari & mengimpor file dari folder 'plugins/'
+│   L── result_manager.py    # Mengelola pencatatan, agregasi, & pelaporan hasil
+|
+├── plugins/                 # [PLUGIN] Berisi semua logika deteksi kerentanan.
+│   ├── __init__.py          # Menjadikan 'plugins' sebagai modul Python
+│   ├── plugin_dom_xss.py    # Plugin #1: Tes DOM XSS (Fase 2, Selenium)
+│   ├── plugin_headers.py    # Plugin #2: Tes Header Keamanan (Fase 1, Requests)
+│   ├── plugin_reflected_xss.py # Plugin #3: Tes Reflected XSS (Fase 1, Requests)
+│   ├── plugin_sqli_time.py  # Plugin #4: Tes SQLi Time-based (Fase 1, Requests)
+│   L── plugin_ssrf_oast.py  # Plugin #5: Tes SSRF OAST (Fase 1, Requests)
+|
+L── reports/                 # [OUTPUT] Laporan JSON akan disimpan di sini.
+    L── .gitkeep             # File placeholder agar folder ini tetap ada di Git

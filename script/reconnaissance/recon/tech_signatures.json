@@ -1,0 +1,45 @@
+{
+  "headers": {
+    "server": {
+      "nginx": "nginx",
+      "apache": "apache",
+      "iis": "microsoft-iis",
+      "cloudflare": "cloudflare",
+      "envoy": "envoy",
+      "litespeed": "litespeed"
+    },
+    "x-powered-by": {
+      "php": "php",
+      "asp.net": "asp.net",
+      "express": "express",
+      "next.js": "next.js",
+      "nuxt.js": "nuxt.js",
+      "laravel": "laravel",
+      "python": "python"
+    },
+    "x-aspnet-version": {
+      "asp.net": "asp.net"
+    },
+    "x-generator": {
+      "wordpress": "wordpress",
+      "drupal": "drupal",
+      "joomla": "joomla"
+    }
+  },
+  "content_patterns": {
+    "wordpress": ["/wp-content/", "/wp-includes/", "wordpress"],
+    "drupal": ["/sites/default/", "drupal"],
+    "joomla": ["/media/jui/", "joomla"],
+    "react": ["__reactInternalInstance", "react-root", "data-reactid"],
+    "vue": ["__vue__", "data-v-"],
+    "angular": ["ng-version", "angular"],
+    "laravel": ["laravel_session", "XSRF-TOKEN"]
+  },
+  "cookies": {
+    "php": ["PHPSESSID"],
+    "asp.net": ["ASP.NET_SessionId"],
+    "wordpress": ["wordpress_logged_in"],
+    "joomla": ["joomla_user_state"],
+    "laravel": ["laravel_session"]
+  }
+}

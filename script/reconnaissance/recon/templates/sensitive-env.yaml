@@ -1,0 +1,18 @@
+id: sensitive-env-file
+info:
+  name: "Sensitive .env file exposed"
+  severity: "high"
+target: "host"
+requests:
+  - method: "GET"
+    path: "{{base_url}}/.env"
+    matchers:
+      - type: "status"
+        status: 200
+      - type: "word"
+        part: "body"
+        words:
+          - "DB_PASSWORD="
+          - "APP_KEY="
+          - "AWS_SECRET_ACCESS_KEY"
+        condition: "or"

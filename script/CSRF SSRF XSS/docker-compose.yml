@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  scanner:
+    build: .
+    container_name: scanner
+    depends_on: [selenium-hub]
+    # Anda akan mengganti 'command' ini saat runtime
+    command: "echo 'Gunakan docker-compose run...'"
+    volumes:
+      - ./reports:/app/reports # [BARU] Menyimpan laporan secara persisten
+
+  selenium-hub:
+    image: selenium/hub:4.16
+    container_name: selenium-hub
+    ports: ["4444:4444"]
+
+  chrome-node:
+    image: selenium/node-chrome:4.16
+    depends_on: [selenium-hub]
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    shm_size: '2g'

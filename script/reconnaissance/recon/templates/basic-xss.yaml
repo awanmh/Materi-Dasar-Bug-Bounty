@@ -1,0 +1,20 @@
+id: basic-reflected-xss
+info:
+  name: "Basic Reflected XSS (Benign Check)"
+  severity: "medium"
+target: "params_get"
+requests:
+  - method: "GET"
+    payload: "<gemini-scan-test-{{rand}}>"
+    path: "{{base_url}}?{{param_name}}={{payload}}"
+    matchers:
+      - type: "status"
+        status: 200
+      - type: "word"
+        part: "body"
+        words:
+          - "<gemini-scan-test-{{rand}}>"
+      - type: "header"
+        part: "content-type"
+        words:
+          - "text/html"
