@@ -25,9 +25,7 @@ Tidak seperti *scanner* biasa yang hanya mencari error, *tool* ini berspesialisa
   * **Deteksi Cerdas (Fingerprinting):** Saat kerentanan *time-based* terdeteksi, *tool* ini akan **mengidentifikasi jenis database** (MySQL, MSSQL, PostgreSQL) dan secara cerdas **hanya** menggunakan payload yang relevan setelahnya.
   * **Eksploitasi Otomatis (PoC):** Setelah kerentanan terkonfirmasi, *tool* ini akan **otomatis** mencoba melakukan eksploitasi *Error-Based* untuk mengambil data sensitif seperti `user()`, `database()`, dan `version()`.
   * **Akurasi Sangat Tinggi:** Menggunakan **analisis diferensial (baseline)** untuk membandingkan respons *true*, *false*, dan *normal*. Ini hampir sepenuhnya menghilangkan *false positive*.
-  * **Sangat Cepat & Skalabel:**
-    1.  **Multi-Target:** Dirancang untuk memindai *daftar* target secara paralel.
-    2.  **Multi-Thread:** Memindai *parameter* di dalam satu target secara paralel.
+  * **Sangat Cepat (Multi-Thread):** Memindai semua parameter, header, dan *key* JSON *di dalam* satu target secara paralel.
   * **Aman:** Menggunakan verifikasi SSL secara *default*.
 
 -----
@@ -47,70 +45,42 @@ pip install requests
 
 ## 📖 Cara Penggunaan
 
-*Tool* ini tidak menggunakan *command-line argument* yang rumit. Alur kerjanya dirancang untuk profesional: Anda mengonfigurasi target Anda langsung di dalam *script*.
+Versi *tool* ini dirancang untuk pemindaian target tunggal secara interaktif.
 
 ### Langkah 1: Salin Kode
 
-Salin kode v6 final ke dalam file, misalnya `sqli_engine.py`.
+Salin kode v6 (Edisi Interaktif) ke dalam file, misalnya `sqli_engine.py`.
 
-### Langkah 2: Konfigurasi Target Anda
+### Langkah 2: Jalankan Pemindai
 
-Buka file `sqli_engine.py` dan gulir ke bagian paling bawah (`if __name__ == "__main__":`). Anda akan melihat daftar bernama `TARGETS_TO_SCAN`.
-
-Ini adalah satu-satunya tempat yang perlu Anda edit.
-
-```python
-# --- CONTOH PENGGUNAAN ---
-if __name__ == "__main__":
-    
-    # Ini adalah simulasi output dari tool crawler (e.g., gospider, hakrawler)
-    TARGETS_TO_SCAN = [
-        # Target 1: GET Sederhana (Hanya string URL)
-        "http://testphp.vulnweb.com/artists.php?artist=1", 
-        
-        # Target 2: GET Sederhana lainnya
-        "http://testphp.vulnweb.com/listproducts.php?cat=1",
-        
-        # Target 3: Halaman untuk tes header
-        "http://testphp.vulnweb.com/index.php",
-        
-        # Target 4: Konfigurasi Kustom untuk POST (Bentuk kamus/dictionary)
-        {
-            "url": "http://testphp.vulnweb.com/login.php",
-            "method": "POST",
-            "post_data": {"username": "test", "password": "123"}
-        },
-
-        # Target 5: Konfigurasi Kustom untuk API/JSON (Bentuk kamus/dictionary)
-        {
-            "url": "https://api.somesite.com/v1/user/update",
-            "method": "POST",
-            "json_data": {"id": 101, "username": "admin", "is_active": true},
-            "headers": {"X-API-Key": "YOUR_API_KEY_HERE"} # Opsional
-        }
-    ]
-
-    print(f"--- MEMULAI MESIN PEMINDAI v6 PADA {len(TARGETS_TO_SCAN)} TARGET ---")
-    
-    with ThreadPoolExecutor(max_workers=5) as executor: # Sesuaikan max_workers
-        executor.map(scan_target, TARGETS_TO_SCAN)
-
-    print("--- SEMUA PEMINDAIAN SELESAI ---")
-
-```
-
-  * **Untuk Target GET Sederhana:** Cukup tambahkan URL lengkap (termasuk parameter) sebagai *string*.
-  * **Untuk Target POST/JSON:** Gunakan format *dictionary* (kamus) untuk menentukan `url`, `method`, `post_data` (untuk form), atau `json_data` (untuk API). Anda juga bisa menambahkan *custom header* jika perlu.
-
-### Langkah 3: Jalankan Pemindai
-
-Setelah Anda menyimpan konfigurasi target Anda, jalankan *script* dari terminal:
+Jalankan *script* dari terminal Anda:
 
 ```bash
 python sqli_engine.py
 ```
 
-*Tool* ini akan secara otomatis memindai semua target dalam daftar Anda secara paralel dan mencetak laporannya langsung ke konsol saat selesai.
+### Langkah 3: Masukkan Target Anda
+
+*Tool* ini akan langsung meminta Anda untuk memasukkan URL target:
+
+```bash
+--- SELAMAT DATANG DI MESIN PEMINDAI SQLi v6 ---
+PERINGATAN: Gunakan hanya pada target yang diizinkan.
+
+Masukkan URL target (cth: http://test.com/index.php?id=1): 
+```
+
+Cukup masukkan URL lengkap (termasuk parameter) dan tekan Enter.
+
+```bash
+Masukkan URL target (cth: http://test.com/index.php?id=1): http://testphp.vulnweb.com/artists.php?artist=1
+
+--- MEMULAI PEMINDAIAN PADA: http://testphp.vulnweb.com/artists.php?artist=1 ---
+[*] Memindai http://testphp.vulnweb.com/artists.php?artist=1...
+... (hasil pemindaian akan muncul di sini) ...
+```
+
+**Catatan Penting:** Mode interaktif ini dirancang untuk **target GET sederhana**. Untuk memindai target POST atau JSON, Anda masih harus memodifikasi blok `if __name__ == "__main__":` secara manual untuk memanggil `scan_target()` dengan konfigurasi *dictionary* (kamus).
 
 -----
 
@@ -119,7 +89,6 @@ python sqli_engine.py
 Berikut adalah contoh output saat *tool* ini menemukan dan mengeksploitasi kerentanan:
 
 ```bash
---- MEMULAI MESIN PEMINDAI v6 PADA 3 TARGET ---
 [*] Memindai http://testphp.vulnweb.com/artists.php?artist=1...
 [INFO] Database terdeteksi pada http://testphp.vulnweb.com/artists.php?artist=1: mysql
 [VULNERABLE] Boolean-Based (String) terdeteksi pada URL Param (GET): artist
@@ -127,11 +96,6 @@ Berikut adalah contoh output saat *tool* ini menemukan dan mengeksploitasi keren
 [EXPLOITED] Data ditemukan pada URL Param (GET) - artist: root@localhost
 [EXPLOITED] Data ditemukan pada URL Param (GET) - artist: acuart
 [EXPLOITED] Data ditemukan pada URL Param (GET) - artist: 5.5.21
-[*] Memindai http://testphp.vulnweb.com/listproducts.php?cat=1...
-[INFO] Database terdeteksi pada http://testphp.vulnweb.com/listproducts.php?cat=1: mysql
-[VULNERABLE] Boolean-Based (String) terdeteksi pada URL Param (GET): cat
-[VULNERABLE] Time-Based (String) terdeteksi pada URL Param (GET): cat
-[EXPLOITED] Data ditemukan pada URL Param (GET) - cat: root@localhost
 ...
 (Laporan akan dicetak di bawah...)
 
@@ -158,8 +122,7 @@ LAPORAN HASIL SCAN v6 - http://testphp.vulnweb.com/artists.php?artist=1
   > Payload : ' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT VERSION())))--
 
 ============================================================
-... (Laporan untuk target lain) ...
---- SEMUA PEMINDAIAN SELESAI ---
+--- PEMINDAIAN SELESAI ---
 ```
 
 -----
@@ -174,5 +137,6 @@ LAPORAN HASIL SCAN v6 - http://testphp.vulnweb.com/artists.php?artist=1
 
 ## ⛔ Batasan
 
-  * **Bukan Crawler:** *Tool* ini adalah **pemindai presisi**, bukan *crawler*. Ini adalah pilihan desain. Alur kerja terbaik adalah menggunakan *tool* lain (seperti `gospider` atau `hakrawler`) untuk menemukan 1000 URL, lalu memasukkan URL tersebut ke dalam `TARGETS_TO_SCAN` *tool* ini.
+  * **Fokus Target Tunggal:** Versi *script* ini dirancang untuk satu input interaktif. Untuk pemindaian *multi-target* (memindai daftar URL), gunakan versi *script* sebelumnya yang berbasis daftar `TARGETS_TO_SCAN`.
+  * **Bukan Crawler:** *Tool* ini adalah **pemindai presisi**, bukan *crawler*. Ini adalah pilihan desain. Alur kerja terbaik adalah menggunakan *tool* lain (seperti `gospider` atau `hakrawler`) untuk menemukan 1000 URL, lalu memasukkan URL tersebut ke *tool* ini (atau versi berbasis daftar).
   * **Eksploitasi Terbatas:** *Tool* ini hanya melakukan eksploitasi *Error-Based* untuk PoC cepat. Ia **tidak** melakukan eksploitasi *Blind-Based* (mengambil data huruf demi huruf), yang merupakan proses sangat lambat yang lebih baik ditangani oleh *tool* seperti `sqlmap`.
