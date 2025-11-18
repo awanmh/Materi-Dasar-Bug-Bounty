@@ -1,0 +1,24 @@
+id: viewer-create-admin
+info:
+  name: "Viewer can create a new Admin user (BAC Test)"
+  severity: "critical"
+target: "host" # Akan berjalan di host yang kita tentukan (misal: http://localhost:3000)
+requests:
+  - method: "POST"
+    # Path API ini seharusnya HANYA bisa diakses oleh Admin
+    path: "{{base_url}}/api/admin/users"
+    
+    # Body JSON untuk membuat pengguna 'Admin' baru
+    body: '{"name":"hacked_by_viewer","email":"hacked@test.local","login":"hacked_by_viewer","password":"Password123!","role":"Admin"}'
+    
+    matchers_condition: "and"
+    matchers:
+      # 1. Kita mencari respons SUKSES (seharusnya 403 Forbidden)
+      - type: "status"
+        status: 200
+        
+      # 2. DAN kita pastikan server mengonfirmasi pembuatan pengguna
+      - type: "word"
+        part: "body"
+        words:
+          - '"message":"User created"'

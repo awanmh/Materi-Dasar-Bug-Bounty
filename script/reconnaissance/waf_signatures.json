@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Cloudflare",
+    "headers": {
+      "server": "cloudflare",
+      "cf-ray": ".*"
+    }
+  },
+  {
+    "name": "Akamai",
+    "headers": {
+      "server": "AkamaiGHost"
+    }
+  },
+  {
+    "name": "Sucuri",
+    "headers": {
+      "server": "Sucuri/Cloudproxy"
+    }
+  },
+  {
+    "name": "AWS WAF",
+    "headers": {
+      "server": "awselb/2.0"
+    },
+    "body_regex": "AWS"
+  },
+  {
+    "name": "ModSecurity",
+    "headers": {},
+    "body_regex": "(Mod_Security|mod_security)"
+  }
+]

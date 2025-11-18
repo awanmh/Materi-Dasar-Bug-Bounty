@@ -1,0 +1,19 @@
+id: csrf-token-extraction
+info:
+  name: "CSRF Token Extraction Test"
+  severity: "info"
+target: "host"
+requests:
+  - method: "GET"
+    path: "{{base_url}}/login"
+    matchers:
+      - type: "status"
+        status: 200
+    extractors:
+      - type: "xpath"
+        xpath: "//input[@name='_token']/@value"
+        name: "csrf_token_xpath"
+      - type: "css"
+        css_selector: "input[name=_token]"
+        attribute: "value"
+        name: "csrf_token_css"
