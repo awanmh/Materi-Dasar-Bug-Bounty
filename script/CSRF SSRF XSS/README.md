@@ -61,6 +61,8 @@ scanner-v7/
 │   ├── oast.py              # Manajer untuk berinteraksi dengan Interact.sh (SSRF, dll.)
 │   ├── plugin_base.py       # [PENTING] Interface (Base Class) yang harus diikuti semua plugin
 │   ├── plugin_loader.py     # Logika untuk mencari & mengimpor file dari folder 'plugins/'
+│   ├── selenium_driver.py   # Berisi konfigurasi ChromeOptions agar kode lebih bersih
+│   ├── stealth_session.py   # Rotasi User-Agent, Jitter, Header palsu agar terlihat seperti manusia.
 │   L── result_manager.py    # Mengelola pencatatan, agregasi, & pelaporan hasil
 |
 ├── plugins/                 # [PLUGIN] Berisi semua logika deteksi kerentanan.
@@ -69,7 +71,19 @@ scanner-v7/
 │   ├── plugin_headers.py    # Plugin #2: Tes Header Keamanan (Fase 1, Requests)
 │   ├── plugin_reflected_xss.py # Plugin #3: Tes Reflected XSS (Fase 1, Requests)
 │   ├── plugin_sqli_time.py  # Plugin #4: Tes SQLi Time-based (Fase 1, Requests)
-│   L── plugin_ssrf_oast.py  # Plugin #5: Tes SSRF OAST (Fase 1, Requests)
+│   ├── plugin_cors.py       # Plugin #5: Jika server memantulkan origin dan mengizinkan kredensial, itu rentan.
+│   ├── plugin_graphql.py    # Plugin #6: Meminta server membeberkan seluruh skema database-nya.
+│   ├── plugin_host_header.py # Plugin #7: Memanipulasi header Host
+│   ├── plugin_js_secrets.py # Plugin #8: Mencari pola API Key (AWS, Google) atau endpoint tersembunyi.
+│   ├── plugin_jwt_attack.py # Plugin #9: Mengubah algoritma tanda tangan JWT menjadi None.
+│   ├── plugin_nosqli.py     # Plugin #10: Mengirim payload JSON ({"$ne": null}) utk manipulasi logic query login.
+│   ├── plugin_proto_pollution.py # Plugin #11: Mencoba mencemari Object.prototype lewat URL dan cek dampak.
+│   ├── plugin_race_condition.py # Plugin #12:Mengirim 10 request yang sama secara bersamaan (paralel).
+│   ├── plugin_sensitive_files.py # Plugin #13: Brute-force mencari file .git, .env, atau backup .sql
+│   ├── plugin_ssti.py       # Plugin #14: Mengirim operasi matematika untuk mengetahui Remote Code Execution.
+│   ├── plugin_takeover.py   # Plugin #15: Mengecek pesan error spesifik (misal "NoSuchBucket")
+│   ├── plugin_xxe.py        # Plugin #16: Mengirim data XML jahat yang merujuk ke server OAST.
+│   L── plugin_ssrf_oast.py  # Plugin #17: Tes SSRF OAST (Fase 1, Requests)
 |
 L── reports/                 # [OUTPUT] Laporan JSON akan disimpan di sini.
     L── .gitkeep             # File placeholder agar folder ini tetap ada di Git
