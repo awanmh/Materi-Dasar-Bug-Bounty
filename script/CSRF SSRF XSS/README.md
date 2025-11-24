@@ -83,7 +83,19 @@ scanner-v7/
 │   ├── plugin_ssti.py       # Plugin #14: Mengirim operasi matematika untuk mengetahui Remote Code Execution.
 │   ├── plugin_takeover.py   # Plugin #15: Mengecek pesan error spesifik (misal "NoSuchBucket")
 │   ├── plugin_xxe.py        # Plugin #16: Mengirim data XML jahat yang merujuk ke server OAST.
-│   L── plugin_ssrf_oast.py  # Plugin #17: Tes SSRF OAST (Fase 1, Requests)
+│   ├── plugin_command_injection.py # Plugin #17: Menyuntikkan perintah shell (curl, wget, nslookup, ping).
+│   ├── plugin_spring_actuator.py # Plugin #18: Melakukan Force Browsing (Brute Force) pada path standar Actuator.
+│   ├── plugin_crlf.py       # Plugin #19: Menyisipkan karakter baris baru (%0d%0a atau \r\n).
+│   ├── plugin_log4shell.py  # Plugin #20: Menyuntikkan payload JNDI (${jndi:ldap://oast...}) ke semua header HTTP dan parameter.
+│   ├── plugin_403_bypass.py # Plugin #21: Mencari parameter URL dan menggantinya dengan endpoint metadata cloud spesifik.
+│   ├── plugin_cloud_metadata.py  # Plugin #22: Mendeteksi halaman 403/401, lalu membombardir dengan header bypass dan variasi URL.
+│   ├── plugin_llm_injection.py  # Plugin #23: Mengirimkan perintah "Jailbreak" ke setiap input teks (chat, search, comments)
+│   ├── plugin_deserialization.py # Plugin #24: Mendeteksi format serialisasi (Base64 Java, PHP serialized string, Python Pickle).
+│   ├── plugin_sspp.py       # Plugin #25: Mengirim payload JSON yang mencoba mencemari properti __proto__.
+│   ├── plugin_wcd.py        # Plugin #26: Celah ini memanfaatkan cara kerja CDN (Content Delivery Network).
+│   ├── plugin_firebase.py   # Plugin #27: Kebocoran data pengguna (email, chat, token) atau penghapusan database total.
+│   ├── plugin_request_smuggling.py  # Plugin #28: Kita mengirim request yang sengaja dibuat ambigu.
+│   L── plugin_ssrf_oast.py  # Plugin #29: Tes SSRF OAST (Fase 1, Requests).
 |
 L── reports/                 # [OUTPUT] Laporan JSON akan disimpan di sini.
     L── .gitkeep             # File placeholder agar folder ini tetap ada di Git
