@@ -1,4 +1,10 @@
-# Web Vulnerability Platform (V7.0)
+```markdown
+ \ \      / /__| | ___| | | | ___  ___| |_(_) |_| | | (_) ___  _ __  
+  \ \ /\ / / _ \ |/ _ \ |_| |/ _ \/ __| __| | __| | | | |/ _ \| '_ \ 
+   \ V  V /  __/ |  __/  _  |  __/\__ \ |_| | |_| | |_| | (_) | | | |
+    \_/\_/ \___|_|\___|_| |_|\___||___/\__|_|\__|_|\___/ \___/|_| |_|
+```
+## Web Vulnerability Platform (V7.0)
 
 Ini adalah platform pemindaian kerentanan web modular yang dapat diperluas, dirancang untuk skalabilitas dan deteksi mendalam. Proyek ini berevolusi dari skrip sederhana menjadi framework berbasis plugin yang menggunakan arsitektur hibrida (requests + selenium) dan infrastruktur ter-container (Docker).
 
@@ -248,3 +254,4 @@ class LFIPlugin(BasePlugin):
 3. Selesai.
 
 Itu saja. Anda tidak perlu mengedit `scanner_v7.py` atau file `core/` apa pun. `plugin_loader` akan secara otomatis menemukan, mengimpor, dan menjalankan plugin baru Anda pada pemindaian berikutnya.
+
