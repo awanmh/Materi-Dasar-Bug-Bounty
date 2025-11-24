@@ -2,20 +2,20 @@
 -----
 
 ```markdown
-  ▄████████    ▄██████▄     ▄████████  ▄██████▄   ███    █▄ 
-  ███    ███   ███    ███   ███    ███ ███    ███  ███    ███ 
-  ███    █▀    ███    ███   ███    █▀  ███    ███  ███    ███ 
-  ███          ███    ███  ▄███▄▄▄     ███    ███  ███    ███ 
-  ███        ▀███████████ ▀▀███▀▀▀   ▀███████████  ███    ███ 
-  ███    █▄    ███    ███   ███    █▄  ███    ███  ███    ███ 
-  ███    ███   ███    ███   ███    ███ ███    ███  ███    ███ 
-  ████████▀    ███    █▀    ██████████ ███    █▀   ████████▀  
+  ▄████████    ▄██████▄     ▄████████  ▄██████▄    ████████▄
+  ███    ███   ███    ███   ███    ███ ███    ███  ███    ███
+  ███    █▀    ███    ███   ███    █▀  ███    ███  ███    ███
+  ███          ███    ███  ▄███▄▄▄     ███    ███  ███    ███
+  ███        ▀███████████ ▀▀███▀▀▀   ▀███████████  ███    ███
+  ███    █▄    ███    ███   ███    █▄  ███    ███  ███    ███
+  ███    ███   ███    ███   ███    ███ ███    ███  ███    ███
+  ████████▀    ███    █▀    ██████████ ███    █▀   ████████▀ 
             [v12.0 - Advanced Template Engine]
 ```
 
-**RECON v12.0** adalah *framework* penilaian keamanan dinamis (DAST) yang modular, *stateful*, dan berbasis templat. Didesain untuk penelitian keamanan dan *blue teaming*, *engine* ini mampu melakukan *crawling* canggih, memvalidasi sesi, dan mengeksekusi logika deteksi kustom yang ditentukan oleh Anda.
+**RECON v12.3** adalah *framework* penilaian keamanan dinamis (DAST) yang modular, *stateful*, dan berbasis templat. Didesain untuk penelitian keamanan dan *blue teaming*, *engine* ini mampu melakukan *crawling* canggih, memvalidasi sesi, mendeteksi tumpukan teknologi (*tech stack*), dan mengeksekusi logika deteksi kustom yang ditentukan oleh Anda.
 
------
+---
 
 ### ⚠️ Peringatan Legal
 
@@ -25,33 +25,34 @@
 >
 > **Jangan pernah** menjalankan alat ini terhadap target yang tidak Anda miliki izin tertulis secara eksplisit. Penggunaan tanpa izin adalah ilegal dan dilarang keras. Penulis tidak bertanggung jawab atas penyalahgunaan atau kerusakan yang disebabkan oleh alat ini.
 
------
+---
 
 ### 🌟 Fitur Utama
 
-  * **Mesin Templat Canggih:** Tulis logika pemindaian Anda sendiri dalam file **YAML** atau **JSON**.
-  * **Stateful & Resumable:** Menggunakan **SQLite** (`--resume`) untuk menyimpan dan melanjutkan pemindaian besar.
-  * **Crawler Cerdas:**
-      * Mode **HTTP** (Cepat) & **Headless** (`--headless`) untuk aplikasi JavaScript-heavy (React/Vue/Angular).
-      * Penemuan *Endpoint* & *Parameter* (`GET` & `POST`).
-      * *Crawling* Rekursif (`-r`) untuk memetakan aplikasi secara dinamis.
-  * **Manajemen Sesi Otomatis:**
-      * Login otomatis (`--login-url`, `--login-data`).
-      * Validasi sesi berkelanjutan (`--auth-check-url`, `--auth-check-string`).
-      * Dukungan penuh untuk pemindaian terotentikasi (`--cookie`, `--header`).
-  * **Template Chaining & Variables:** Ekstrak nilai (seperti token CSRF) dari satu *request* dan gunakan di *request* berikutnya.
-  * **Payload Dictionaries:** Muat *wordlist* (misal: `passwords.txt`) di dalam templat untuk *brute-force*.
-  * **Matcher & Extractor Canggih:**
-      * **Matchers:** `status`, `word`, `header`, `regex`, `binary` (hex).
-      * **Extractors:** `regex`, `css`, `xpath`, `json`.
-  * **Penemuan Cerdas:** Deteksi *Wildcard DNS*, Analisis file `.js` untuk *endpoint* API.
-  * **UX Modern:** *Output* berwarna, *progress bar* (`tqdm`), dan mode senyap (`--silent`).
+* **Mesin Templat Canggih:** Tulis logika pemindaian Anda sendiri dalam file **YAML** atau **JSON**.
+* **Stateful & Resumable:** Menggunakan **SQLite** (`--resume`) untuk menyimpan dan melanjutkan pemindaian besar.
+* **Crawler Cerdas:**
+    * Mode **HTTP** (Cepat) & **Headless** (`--headless`) untuk aplikasi JavaScript-heavy (React/Vue/Angular).
+    * Penemuan *Endpoint* & *Parameter* (`GET` & `POST`).
+    * *Crawling* Rekursif (`-r`) untuk memetakan aplikasi secara dinamis.
+    * **[BARU] Technology Detection:** Mendeteksi framework, backend, dan database secara otomatis.
+* **Manajemen Sesi Otomatis:**
+    * Login otomatis (`--login-url`, `--login-data`).
+    * Validasi sesi berkelanjutan (`--auth-check-url`, `--auth-check-string`).
+    * Dukungan penuh untuk pemindaian terotentikasi (`--cookie`, `--header`).
+* **Template Chaining & Variables:** Ekstrak nilai (seperti token CSRF) dari satu *request* dan gunakan di *request* berikutnya.
+* **Payload Dictionaries:** Muat *wordlist* (misal: `passwords.txt`) di dalam templat untuk *brute-force*.
+* **Matcher & Extractor Canggih:**
+    * **Matchers:** `status`, `word`, `header`, `regex`, `binary` (hex).
+    * **Extractors:** `regex`, `css`, `xpath`, `json`.
+* **Penemuan Cerdas:** Deteksi *Wildcard DNS*, Analisis file `.js` untuk *endpoint* API.
+* **UX Modern:** *Output* berwarna, *progress bar* (`tqdm`), dan mode senyap (`--silent`).
 
------
+---
 
 ### 📂 Struktur File
 
-```
+```text
 recon-v12/
 ├── recon-v12.0.py           # File utama (Entrypoint)
 ├── tech_signatures.json    # Tanda tangan untuk deteksi teknologi
@@ -86,7 +87,7 @@ Alat ini memerlukan **Python 3.8+**.
 #### 1\. Kloning Repositori
 
 ```bash
-git clone <url-repositori-anda>
+git clone https://github.com/awanmh/Materi-Dasar-Bug-Bounty.git
 cd recon-v12
 ```
 
@@ -145,62 +146,45 @@ pyppeteer-install
 Ini adalah *output* dari argumen yang tersedia.
 
 ```text
-usage: recon-v12.0.py [-h] [-o OUTPUT] [-c CONCURRENCY] [--silent] [--resume] [-r] [--headless] -t TEMPLATES -sw SUBDOMAIN_WORDLIST -dw DIRECTORY_WORDLIST
-                      [-ts TECH_SIGNATURES] [-js JS_PATTERNS] [-ws WAF_SIGNATURES] [-H HEADER] [-b COOKIE] [--login-url LOGIN_URL] [--login-data LOGIN_DATA]
-                      [--auth-check-url AUTH_CHECK_URL] [--auth-check-string AUTH_CHECK_STRING] [-ua USER_AGENTS] [-p PROXY] [--filter-status FILTER_STATUS [FILTER_STATUS ...]]
-                      [--filter-size FILTER_SIZE [FILTER_SIZE ...]]
+usage: recon-v12.0.py [-h] [-o OUTPUT] [-c CONCURRENCY] [--silent] [--resume] [-r] [--headless] 
+                      [-t TEMPLATES] [-sw SUBDOMAIN_WORDLIST] [-dw DIRECTORY_WORDLIST]
+                      [-H HEADER] [-b COOKIE] [--login-url LOGIN_URL] [--login-data LOGIN_DATA]
+                      [--auth-check-url AUTH_CHECK_URL] [--auth-check-string AUTH_CHECK_STRING] 
+                      [-ua USER_AGENTS] [-p PROXY] [--chrome-path CHROME_PATH]
                       domain
 
-🔍 RECONNAISSANCE FRAMEWORK v12.0
+🔍 RECONNAISSANCE FRAMEWORK v12.3
 
 Core Arguments:
   domain                Target domain to analyze
-  -o, --output OUTPUT   Output directory for results
-  -c, --concurrency CONCURRENCY
-                        Number of concurrent tasks (default: 50)
+  -o, --output          Output directory for results
+  -c, --concurrency     Number of concurrent tasks (default: 50)
   --silent              Disable most output, only show critical findings
   --resume              Resume scan from database
 
 Crawler Arguments:
   -r, --recursive       Enable recursive crawling
   --headless            Use headless browser (Pyppeteer) for crawling
+  --chrome-path         Path to local Chrome/Edge executable (Fixes download errors)
 
 Source Arguments:
-  -t, --templates TEMPLATES
-                        Path to templates folder (YAML/JSON)
-  -sw, --subdomain-wordlist SUBDOMAIN_WORDLIST
-                        Path to subdomain wordlist file
-  -dw, --directory-wordlist DIRECTORY_WORDLIST
-                        Path to directory/endpoint wordlist file
-  -ts, --tech-signatures TECH_SIGNATURES
-                        Path to technology signatures JSON file
-  -js, --js-patterns JS_PATTERNS
-                        Path to JS regex patterns JSON file
-  -ws, --waf-signatures WAF_SIGNATURES
-                        Path to WAF signatures JSON file
+  -t, --templates       Path to templates folder (YAML/JSON)
+  -sw, --subdomain-wordlist Path to subdomain wordlist file
+  -dw, --directory-wordlist Path to directory/endpoint wordlist file
 
-Authentication & Session Arguments:
-  -H, --header HEADER   Add custom header (e.g., "Auth: ...")
-  -b, --cookie COOKIE   Add custom cookie string (e.g., "SESSION=...")
-  --login-url LOGIN_URL
-                        URL untuk POST data login
-  --login-data LOGIN_DATA
-                        Data form login (e.g., "user=a&pass=b")
-  --auth-check-url AUTH_CHECK_URL
-                        URL untuk mengecek validitas sesi
-  --auth-check-string AUTH_CHECK_STRING
-                        String yang MUNCUL jika sesi TIDAK VALID (logout)
+Authentication & Session:
+  -H, --header          Add custom header (e.g., "Auth: ...")
+  -b, --cookie          Add custom cookie string (e.g., "SESSION=...")
+  --login-url           URL untuk POST data login
+  --login-data          Data form login (e.g., "user=a&pass=b")
+  --auth-check-url      URL untuk mengecek validitas sesi
+  --auth-check-string   String yang MUNCUL jika sesi TIDAK VALID (logout)
 
-Evasion & Filter Arguments:
-  -ua, --user-agents USER_AGENTS
-                        Path to file with User-Agents (one per line) for rotation
-  -p, --proxy PROXY     Set a single proxy (e.g., "http://127.0.0.1:8080")
-  --filter-status FILTER_STATUS [FILTER_STATUS ...]
-                        Filter (ignore) responses with these status codes
-  --filter-size FILTER_SIZE [FILTER_SIZE ...]
-                        Filter (ignore) responses with these content lengths
-
-Example: python recon-v12.0.py example.com -t ./templates/ -sw subs.txt -dw dirs.txt -c 50
+Evasion & Filter:
+  -ua, --user-agents    Path to file with User-Agents for rotation
+  -p, --proxy           Set a single proxy (e.g., "http://127.0.0.1:8080")
+  --filter-status       Filter (ignore) responses with these status codes
+  --filter-size         Filter (ignore) responses with these content lengths
 ```
 
 -----
@@ -217,19 +201,27 @@ python recon-v12.0.py example.com -sw wordlists/subs.txt -dw wordlists/dirs.txt 
 
 #### 2\. Pemindaian Aplikasi JavaScript (Headless & Rekursif)
 
-Sempurna untuk aplikasi React/Vue/Angular. Jauh lebih lambat tetapi jauh lebih teliti.
+Sempurna untuk aplikasi React/Vue/Angular. Jauh lebih lambat tetapi jauh lebih teliti. Jika pyppeteer gagal mengunduh Chromium, gunakan `--chrome-path`.
 
 ```bash
-python recon-v12.0.py app.example.com -sw subs.txt -dw dirs.txt -t ./templates/ -o ./scan-output -c 10 --headless -r
+python recon-v12.0.py app.example.com \
+  -sw subs.txt -dw dirs.txt \
+  -t ./templates/ \
+  -o ./scan-output -c 10 \
+  --headless -r \
+  --chrome-path 'C:\Program Files\Google\Chrome\Application\chrome.exe'
 ```
 
 #### 3\. Pemindaian Terotentikasi (Setelah Login)
 
-Memindai area yang dilindungi login menggunakan *cookie* sesi Anda.
+Memindai area yang dilindungi login menggunakan cookie sesi Anda.
 
 ```bash
-# -b untuk cookie, --silent untuk menyembunyikan noise
-python recon-v12.0.py dashboard.example.com -sw subs.txt -dw dirs.txt -t ./templates/ -b "session_id=abc123xyz789" --silent
+python recon-v12.0.py dashboard.example.com \
+  -sw subs.txt -dw dirs.txt \
+  -t ./templates/ \
+  -b "session_id=abc123xyz789" \
+  --silent
 ```
 
 #### 4\. Pemindaian dengan Auto-Login
@@ -246,7 +238,7 @@ python recon-v12.0.py example.com -sw subs.txt -dw dirs.txt -t ./templates/ \
 
 #### 5\. Melanjutkan Pemindaian (Resume)
 
-Jika pemindaian 10 jam Anda gagal, Anda tidak perlu mengulang. Alat ini akan memuat temuan dari `recon.db` di folder *output* dan langsung melanjutkan ke Phase 4 (Assessment).
+Jika pemindaian 10 jam Anda gagal, Anda tidak perlu mengulang. Alat ini akan memuat temuan dari recon.db di folder output dan langsung melanjutkan ke Phase 4 (Assessment).
 
 ```bash
 # Perhatikan --resume. Tidak perlu -sw atau -dw lagi.
@@ -257,41 +249,33 @@ python recon-v12.0.py example.com -t ./templates/ -o ./scan-output --resume
 
 ### 📐 Arsitektur Templat (Cara Menulis Templat)
 
-Ini adalah inti dari *engine*. Templat adalah file **YAML** (atau JSON) yang mendefinisikan *request* dan *matcher*.
+Ini adalah inti dari engine. Templat adalah file **YAML** (atau JSON) yang mendefinisikan *request* dan *matcher*.
 
-```yaml
-# ID unik untuk templat
+Contoh `templates/basic-check.yaml`:
+
+```text
 id: nama-templat-unik
 info:
-  name: "Nama templat yang mudah dibaca"
-  severity: "info" # info, medium, high, critical
-
-# Target (di mana templat ini akan dijalankan)
-# - "host": Dijalankan 1x per host (misal: {{base_url}} dari live_hosts)
-# - "params_get": Dijalankan untuk SETIAP parameter GET yang ditemukan
+  name: "Deskripsi Templat"
+  severity: "high"
 target: "host" 
 
-# Daftar request yang akan dieksekusi SECARA BERURUTAN (Chaining)
 requests:
   - method: "POST"
     path: "{{base_url}}/login"
     
     # --- PAYLOADS ---
-    # 1. Payload tunggal
-    payload: "<gemini-test-{{rand}}>"
+    payload: "<test-payload-{{rand}}>"
+    # ATAU gunakan file:
+    # payload_file: "wordlists/passwords.txt"
     
-    # 2. ATAU File Payload (untuk brute-force)
-    payload_file: "wordlists/passwords.txt"
-    
-    # {{payload}} akan diganti di 'body' atau 'path'
     body: "user=admin&pass={{payload}}"
     
     # --- EXTRACTORS (Variables) ---
-    # Dijalankan setelah request, untuk menyimpan variabel
     extractors:
-      - type: "regex" # Tipe: regex, css, xpath, json
-        part: "body" # Target: body, header
-        regex: "name=\"_token\" value=\"(.*?)\"" # Grup (.*?) akan diekstrak
+      - type: "regex" 
+        part: "body" 
+        regex: "name=\"_token\" value=\"(.*?)\""
         name: "csrf_token" # Disimpan sebagai {{csrf_token}}
 
   - method: "POST"
@@ -300,32 +284,15 @@ requests:
     body: "id=1"
     
     # --- MATCHERS (Kondisi Temuan) ---
-    matchers_condition: "and" # 'and' atau 'or'
+    matchers_condition: "and"
     matchers:
-      # Matcher 1: Tipe Status
       - type: "status"
         status: 200
-        
-      # Matcher 2: Tipe Word (Teks)
       - type: "word"
-        part: "body" # Target: body, header
+        part: "body"
         words:
-          - "User deleted successfully"
-          - "Admin Dashboard"
-        condition: "or" # 'or' atau 'and' (untuk daftar 'words')
-
-      # Matcher 3: Tipe Regex
-      - type: "regex"
-        part: "body"
-        regex:
-          - "root:x:0:0"
-        
-      # Matcher 4: Tipe Binary (Hex)
-      - type: "binary"
-        part: "body"
-        hex_payloads:
-          - "474946383961" # GIF
+          - "Success"
+          - "Deleted"
+        condition: "or"
 ```
-
-```eof
 ```
