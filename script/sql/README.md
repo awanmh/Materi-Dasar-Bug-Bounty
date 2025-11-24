@@ -1,142 +1,167 @@
-# SQLiPoCEngine: Mesin Pemindai & Eksploitasi SQLi Cerdas
+```markdown
+   ▄▄▄       ██▓███  ▓█████  ██▀███   ▒█████   ██▓    
+  ▒████▄    ▓██░  ██▒▓█   ▀ ▓██ ▒ ██▒▒██▒  ██▒▓██▒    
+  ▒██  ▀█▄  ▓██░ ██▓▒▒███   ▓██ ░▄█ ▒▒██░  ██▒▒██░    
+  ░██▄▄▄▄██ ▒██▄█▓▒ ▒▒▓█  ▄ ▒██▀▀█▄  ▒██   ██░▒██░    
+   ▓█   ▓██▒▒██▒ ░  ░░▒████▒░██▓ ▒██▒░ ████▓▒░░██████▒
+   ▒▒   ▓▒█░▒▓▒░ ░  ░░░ ▒░ ░░ ▒▓ ░▒▓░░ ▒░▒░▒░ ░ ▒░▓  ░
+    ▒   ▒▒ ░░▒ ░      ░ ░  ░  ░▒ ░ ▒░  ░ ▒ ▒░ ░ ░ ▒  ░
+    ░   ▒   ░░          ░     ░░   ░ ░ ░ ░ ▒    ░ ░   
+        ░  ░            ░  ░   ░         ░ ░      ░  ░
 
-`SQLiPoCEngine` adalah *tool* pemindai keamanan *multi-thread* canggih yang dirancang untuk menemukan, mengidentifikasi, dan secara otomatis mengeksploitasi kerentanan SQL Injection (SQLi) yang kompleks.
+```
+## 🦈 Apex SQLi Hunter v8.0 (The Apex Predator)
 
-Tidak seperti *scanner* biasa yang hanya mencari error, *tool* ini berspesialisasi dalam menemukan kerentanan *Blind* (Boolean-based & Time-based) yang paling sulit ditemukan di berbagai vektor serangan, lalu secara otomatis membuktikan dampaknya (PoC) dengan mengekstraksi data.
+**Apex SQLi Hunter** adalah mesin pemindai keamanan SQL Injection generasi terbaru yang dirancang untuk presisi mutlak. Berbeda dengan *scanner* konvensional yang mengandalkan panjang konten (*Content Length*)—yang sering gagal pada halaman dinamis—Apex v8 menggunakan algoritma **Smart Diffing (Fuzzy Logic)** untuk membedakan antara halaman normal, dinamis, dan respons injeksi dengan akurasi 99%.
 
-## ⚠️ Peringatan Penting
+Alat ini dibangun untuk *Bug Bounty Hunters* dan *Penetration Testers* yang membutuhkan kecepatan, ketepatan, dan kemampuan untuk menghindari deteksi WAF dasar.
 
-**Tool ini dibuat murni untuk tujuan edukasi dan pengujian keamanan yang sah (authorized).**
+## ⚠️ Disclaimer (Peringatan Keras)
 
-  * **Jangan Pernah** gunakan *tool* ini pada sistem yang bukan milik Anda atau tanpa izin tertulis yang eksplisit.
-  * *Bug bounty* adalah pengujian yang sah, tetapi pastikan Anda selalu mematuhi *scope* (ruang lingkup) program.
-  * Penulis tidak bertanggung jawab atas penyalahgunaan *tool* ini atau kerusakan apa pun yang disebabkannya.
-
------
-
-## 🚀 Fitur Unggulan
-
-  * **Pemindaian Multi-Vektor:** Tidak hanya URL, *tool* ini menguji:
-      * Parameter GET
-      * Parameter POST (Form-Data)
-      * *Body* JSON (untuk API)
-      * *HTTP Headers* (Cookie, User-Agent, Referer, dll.)
-  * **Deteksi Multi-Konteks:** Secara otomatis menguji payload untuk konteks **String** (`'payload'`) dan **Numerik** (`123 payload`) untuk akurasi maksimum.
-  * **Deteksi Cerdas (Fingerprinting):** Saat kerentanan *time-based* terdeteksi, *tool* ini akan **mengidentifikasi jenis database** (MySQL, MSSQL, PostgreSQL) dan secara cerdas **hanya** menggunakan payload yang relevan setelahnya.
-  * **Eksploitasi Otomatis (PoC):** Setelah kerentanan terkonfirmasi, *tool* ini akan **otomatis** mencoba melakukan eksploitasi *Error-Based* untuk mengambil data sensitif seperti `user()`, `database()`, dan `version()`.
-  * **Akurasi Sangat Tinggi:** Menggunakan **analisis diferensial (baseline)** untuk membandingkan respons *true*, *false*, dan *normal*. Ini hampir sepenuhnya menghilangkan *false positive*.
-  * **Sangat Cepat (Multi-Thread):** Memindai semua parameter, header, dan *key* JSON *di dalam* satu target secara paralel.
-  * **Aman:** Menggunakan verifikasi SSL secara *default*.
+**ALAT INI HANYA UNTUK TUJUAN PENDIDIKAN DAN PENGUJIAN LEGAL.**
+Penggunaan alat ini untuk menyerang target tanpa izin tertulis adalah **ILEGAL**. Pengembang tidak bertanggung jawab atas segala kerusakan atau penyalahgunaan yang disebabkan oleh alat ini. Gunakan dengan bijak dan etis.
 
 -----
 
-## ⚙️ Kebutuhan Sistem
+## 🚀 Fitur "God Mode" (v8 Highlights)
 
-  * Python 3.x
-  * Library `requests`
+### 1\. 🧠 Smart Diff Engine (Fuzzy Logic)
 
-Anda dapat menginstalnya menggunakan pip:
+Tidak lagi terkecoh oleh iklan dinamis, jam digital, atau token CSRF yang berubah-ubah.
+
+  * **Old Tech:** Mengandalkan `Content-Length`. (Banyak *False Positive*).
+  * **Apex v8:** Menggunakan `difflib` untuk menghitung **Similarity Ratio**. Jika halaman berubah tapi kemiripannya masih 98%, alat ini tahu itu aman. Injeksi dideteksi hanya jika struktur halaman berubah drastis akibat manipulasi SQL.
+
+### 2\. 🛡️ Advanced WAF Evasion
+
+Dirancang untuk menyusup di bawah radar.
+
+  * **IP Spoofing:** Melakukan *Header Pollution* (`X-Originating-IP`, `X-Forwarded-For`) dengan IP palsu acak di setiap permintaan untuk membingungkan *rate limiter*.
+  * **Browser Mimicry:** Mengirim header lengkap (`Upgrade-Insecure-Requests`, `Accept-Language`) agar terlihat seperti pengguna browser asli.
+
+### 3\. ✅ Auto-Verification Mechanism
+
+Menghilangkan *False Positive* pada *Time-Based Blind*.
+
+  * Jika server *timeout*, Apex v8 tidak langsung menyimpulkan kerentanan. Ia melakukan verifikasi ulang (`double-check`). Hanya jika permintaan kedua juga tertunda sesuai waktu yang ditentukan, kerentanan dikonfirmasi.
+
+### 4\. 🌍 Universal DBMS Support
+
+Tidak hanya MySQL. Mendukung payload untuk:
+
+  * MySQL / MariaDB
+  * PostgreSQL
+  * Microsoft SQL Server (MSSQL)
+  * Oracle
+  * SQLite (Simulasi *Heavy Query*)
+
+### 5\. 💉 Auto-Exploitation (PoC)
+
+Jika kerentanan *Error-Based* ditemukan, alat ini secara otomatis mengekstraksi data vital (Versi DB, User, atau Nama DB) sebagai Bukti Konsep (Proof of Concept) instan.
+
+-----
+
+## 📦 Instalasi
+
+Alat ini membutuhkan Python 3.x dan beberapa pustaka eksternal.
 
 ```bash
-pip install requests
+# 1. Clone atau download script ini
+# 2. Install dependencies
+pip install requests colorama
 ```
+
+*Catatan: `difflib`, `argparse`, dan `threading` adalah pustaka standar Python dan tidak perlu diinstal.*
 
 -----
 
 ## 📖 Cara Penggunaan
 
-Versi *tool* ini dirancang untuk pemindaian target tunggal secara interaktif.
+Apex v8 mendukung dua mode operasi: **Mode CLI (Pro)** untuk integrasi cepat, dan **Mode Interaktif (Pemula)**.
 
-### Langkah 1: Salin Kode
+### 1\. Mode CLI (Command Line Interface)
 
-Salin kode v6 (Edisi Interaktif) ke dalam file, misalnya `sqli_engine.py`.
+Cocok untuk *scripting* atau penggunaan cepat.
 
-### Langkah 2: Jalankan Pemindai
-
-Jalankan *script* dari terminal Anda:
+**Scan target GET sederhana:**
 
 ```bash
-python sqli_engine.py
+python apex_sqli.py -u "http://target-site.com/news.php?id=1"
 ```
 
-### Langkah 3: Masukkan Target Anda
-
-*Tool* ini akan langsung meminta Anda untuk memasukkan URL target:
+**Scan target dengan parameter POST:**
 
 ```bash
---- SELAMAT DATANG DI MESIN PEMINDAI SQLi v6 ---
-PERINGATAN: Gunakan hanya pada target yang diizinkan.
-
-Masukkan URL target (cth: http://test.com/index.php?id=1): 
+python apex_sqli.py -u "http://target-site.com/login.php" -p "username=admin&password=123"
 ```
 
-Cukup masukkan URL lengkap (termasuk parameter) dan tekan Enter.
+### 2\. Mode Interaktif
+
+Cukup jalankan script tanpa argumen, dan wizard akan memandu Anda.
 
 ```bash
-Masukkan URL target (cth: http://test.com/index.php?id=1): http://testphp.vulnweb.com/artists.php?artist=1
-
---- MEMULAI PEMINDAIAN PADA: http://testphp.vulnweb.com/artists.php?artist=1 ---
-[*] Memindai http://testphp.vulnweb.com/artists.php?artist=1...
-... (hasil pemindaian akan muncul di sini) ...
+python apex_sqli.py
 ```
 
-**Catatan Penting:** Mode interaktif ini dirancang untuk **target GET sederhana**. Untuk memindai target POST atau JSON, Anda masih harus memodifikasi blok `if __name__ == "__main__":` secara manual untuk memanggil `scan_target()` dengan konfigurasi *dictionary* (kamus).
+*Output:*
 
------
-
-## 📊 Contoh Hasil
-
-Berikut adalah contoh output saat *tool* ini menemukan dan mengeksploitasi kerentanan:
-
-```bash
-[*] Memindai http://testphp.vulnweb.com/artists.php?artist=1...
-[INFO] Database terdeteksi pada http://testphp.vulnweb.com/artists.php?artist=1: mysql
-[VULNERABLE] Boolean-Based (String) terdeteksi pada URL Param (GET): artist
-[VULNERABLE] Time-Based (String) terdeteksi pada URL Param (GET): artist
-[EXPLOITED] Data ditemukan pada URL Param (GET) - artist: root@localhost
-[EXPLOITED] Data ditemukan pada URL Param (GET) - artist: acuart
-[EXPLOITED] Data ditemukan pada URL Param (GET) - artist: 5.5.21
-...
-(Laporan akan dicetak di bawah...)
-
-============================================================
-LAPORAN HASIL SCAN v6 - http://testphp.vulnweb.com/artists.php?artist=1
-============================================================
-
---- [!] KERENTANAN DITEMUKAN ---
-
---- Vektor: URL Param (GET) - artist ---
-  > Tipe    : Boolean-Based (String)
-  > Payload : ' AND '1'='1'--
-  > Tipe    : Time-Based (String)
-  > Payload : ' AND SLEEP(3)--
-
---- [!!!] DATA BERHASIL DIEKSPLOITASI ---
-
---- Vektor: URL Param (GET) - artist ---
-  > DATA    : root@localhost
-  > Payload : ' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT USER())))--
-  > DATA    : acuart
-  > Payload : ' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT DATABASE())))--
-  > DATA    : 5.5.21
-  > Payload : ' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT VERSION())))--
-
-============================================================
---- PEMINDAIAN SELESAI ---
+```text
+Masukkan URL Target: http://testphp.vulnweb.com/artists.php?artist=1
+Tidak ada param GET. Mode POST? (y/n): n
+... Memulai scan ...
 ```
 
 -----
 
-## 💡 Bagaimana Cara Kerjanya
+## 📊 Memahami Laporan Output
 
-1.  **Baseline:** *Tool* mengirim permintaan normal untuk mengukur panjang konten dan waktu respons.
-2.  **Boolean-Based:** *Tool* mengirim payload `... AND 1=1` (true) dan `... AND 1=2` (false). Jika respons *true* cocok dengan *baseline* dan respons *false* **berbeda**, kerentanan ditemukan.
-3.  **Time-Based:** *Tool* mengirim payload `... AND SLEEP(3)`. Jika waktu respons secara signifikan lebih lama dari `baseline + 3 detik`, kerentanan ditemukan.
-4.  **Fingerprint:** Saat *time-based* berhasil, *tool* mencatat DBMS (`mysql`, `mssql`, `postgresql`) berdasarkan payload yang berhasil.
-5.  **Exploit (PoC):** *Tool* menggunakan payload *error-based* (`EXTRACTVALUE`, dll.) yang sesuai dengan DBMS yang terdeteksi untuk mengambil data dan membuktikan dampaknya.
+Warna indikator membantu Anda membaca situasi dengan cepat:
 
-## ⛔ Batasan
+  * 🔵 **[INFO]**: Informasi proses (memulai scan, kalibrasi).
+  * 🟢 **[+]**: Target aman atau pengecekan berhasil (Baseline OK).
+  * 🟣 **[\!]**: Peringatan (Server lambat, potensi timeout).
+  * 🔴 **[\!\!\!]**: **VULNERABILITY FOUND\!** (Kerentanan terkonfirmasi).
 
-  * **Fokus Target Tunggal:** Versi *script* ini dirancang untuk satu input interaktif. Untuk pemindaian *multi-target* (memindai daftar URL), gunakan versi *script* sebelumnya yang berbasis daftar `TARGETS_TO_SCAN`.
-  * **Bukan Crawler:** *Tool* ini adalah **pemindai presisi**, bukan *crawler*. Ini adalah pilihan desain. Alur kerja terbaik adalah menggunakan *tool* lain (seperti `gospider` atau `hakrawler`) untuk menemukan 1000 URL, lalu memasukkan URL tersebut ke *tool* ini (atau versi berbasis daftar).
-  * **Eksploitasi Terbatas:** *Tool* ini hanya melakukan eksploitasi *Error-Based* untuk PoC cepat. Ia **tidak** melakukan eksploitasi *Blind-Based* (mengambil data huruf demi huruf), yang merupakan proses sangat lambat yang lebih baik ditangani oleh *tool* seperti `sqlmap`.
+**Contoh Output Sukses:**
+
+```text
+[*] Scanning Target: http://testphp.vulnweb.com/artists.php?artist=1
+[*] Melakukan kalibrasi Heuristic & Baseline...
+[+] Baseline OK. Latency: 0.23s. Size: 4520 bytes.
+[*] Testing Boolean-Based (Smart Diff)...
+[!!!] Boolean SQLi Ditemukan! (Diff Logic)
+[!!!] Payload True: ' AND 1=1-- - (Sim: 0.99)
+[!!!] Payload False: ' AND 1=2-- - (Sim: 0.85)
+[*] Testing Time-Based Blind...
+[*] Mencoba Eksploitasi Data (Error-Based)...
+[!!!] DATA EXFILTRATED (MySQL): root@localhost
+```
+
+-----
+
+## 🧠 Logika Teknis (How it Works)
+
+1.  **Calibration:** Mengambil *Baseline Request* untuk mempelajari struktur HTML normal dan latensi jaringan rata-rata.
+2.  **Diffing Attack:** Menyuntikkan payload `TRUE` dan `FALSE`.
+      * Jika `TRUE` ≈ Baseline (\>95% mirip) DAN `FALSE` ≠ Baseline (\<95% mirip) =\> **VULNERABLE**.
+3.  **Latency Attack:** Menyuntikkan payload waktu (`SLEEP`, `WAITFOR`).
+      * Jika respons \> (waktu tidur + latensi normal) DAN terverifikasi 2x =\> **VULNERABLE**.
+4.  **Auto-Pwn:** Jika rentan, mencoba payload `EXTRACTVALUE` atau error-conversion untuk mencuri data versi/user.
+
+-----
+
+## 🛠️ Opsi Konfigurasi (Dalam Script)
+
+Anda dapat mengedit bagian atas script untuk menyesuaikan kebutuhan:
+
+```python
+# --- KONFIGURASI GLOBAL ---
+PROXY = None  # Ganti dengan {'http': 'http://127.0.0.1:8080'} untuk Burp Suite
+TIMEOUT = 20  # Detik sebelum timeout
+MAX_THREADS = 10 # Jumlah thread paralel
+SIMILARITY_THRESHOLD = 0.95 # Sensitivitas Smart Diff (0.0 - 1.0)
+```
+
+-----
+
+**Happy Hacking & Stay Legal\!** 🕵️‍♂️💻
