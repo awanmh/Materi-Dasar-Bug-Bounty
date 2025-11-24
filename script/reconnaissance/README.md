@@ -10,10 +10,10 @@
   ███    █▄    ███    ███   ███    █▄  ███    ███  ███    ███
   ███    ███   ███    ███   ███    ███ ███    ███  ███    ███
   ████████▀    ███    █▀    ██████████ ███    █▀   ████████▀ 
-            [v12.0 - Advanced Template Engine]
+            [v16.0 - Advanced Recon Engine]
 ```
 
-**RECON v12.3** adalah *framework* penilaian keamanan dinamis (DAST) yang modular, *stateful*, dan berbasis templat. Didesain untuk penelitian keamanan dan *blue teaming*, *engine* ini mampu melakukan *crawling* canggih, memvalidasi sesi, mendeteksi tumpukan teknologi (*tech stack*), dan mengeksekusi logika deteksi kustom yang ditentukan oleh Anda.
+**RECON v16.0** adalah *framework* penilaian keamanan dinamis (DAST) yang modular, *stateful*, dan berbasis templat. Didesain untuk penelitian keamanan dan *blue teaming*, *engine* ini mampu melakukan *crawling* canggih, memvalidasi sesi, mendeteksi tumpukan teknologi (*tech stack*), dan mengeksekusi logika deteksi kustom yang ditentukan oleh Anda.
 
 ---
 
@@ -58,6 +58,10 @@ recon-v12/
 ├── tech_signatures.json    # Tanda tangan untuk deteksi teknologi
 ├── js_patterns.json        # Pola Regex untuk mengekstrak path dari file .js
 ├── waf_signatures.json       # Tanda tangan untuk deteksi WAF
+├── security_signatures.json
+├── takeover_signatures.json
+├── api_signatures.json
+├── secrets_patterns.json
 │
 ├── wordlists/                # (Contoh wordlist payload)
 │   └── common-passwords.txt
@@ -244,7 +248,71 @@ Jika pemindaian 10 jam Anda gagal, Anda tidak perlu mengulang. Alat ini akan mem
 # Perhatikan --resume. Tidak perlu -sw atau -dw lagi.
 python recon-v12.0.py example.com -t ./templates/ -o ./scan-output --resume
 ```
+-----
+#### Skenario Penggunaan (Command Examples)
+**Skenario A: "The Hidden Asset Hunt" (Mode Penuh v16)**
+Mode ini mengaktifkan Headless Browser untuk merender JavaScript. Ini wajib jika Anda ingin fitur Source Map Discovery dan Broken Link Hijacking bekerja maksimal (karena banyak link ada di dalam JS yang dirender).
 
+Fitur yang aktif:
+
+✅ Source Map Reconstruction (.js.map)
+
+✅ Broken Link Hijacking Check
+
+✅ API Hunting (Swagger/GraphQL)
+
+✅ Cloud Buckets & Ports
+
+✅ Secrets Scanning
+
+```PowerShell
+python recon-v16.0.py target.com `
+  -t ./templates `
+  -sw wordlists/subs.txt `
+  -dw wordlists/dirs.txt `
+  -o ./hasil_scan_v16 `
+  -c 10 `
+  --headless `
+  --screenshot `
+  --api `
+  --cloud `
+  --ports `
+  --wayback
+```
+*(Catatan: -c 10 digunakan agar browser headless tidak membebani CPU/RAM. Jika tanpa headless, Anda bisa pakai -c 50).*
+
+**Skenario B: Scan Cepat (HTTP Mode)**
+Jika Anda ingin cepat dan tidak peduli dengan render JS atau Screenshot. Fitur Source Map dan BLH tetap berjalan tapi hanya pada HTML statis.
+
+```bash
+python recon-v16.0.py target.com `
+  -t ./templates `
+  -sw wordlists/subs.txt `
+  -dw wordlists/dirs.txt `
+  -o ./hasil_cepat `
+  -c 50 `
+  --api
+```
+**Skenario C: Mengatasi Masalah Pyppeteer (Chrome Path)**
+Jika Anda mendapatkan error Chromium downloadable not found, gunakan browser Chrome/Edge yang ada di laptop Anda.
+
+```bash
+python recon-v16.0.py target.com `
+  -t ./templates `
+  -sw wordlists/subs.txt `
+  -dw wordlists/dirs.txt `
+  --headless `
+  --chrome-path 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+```
+
+```bash
+python recon-v16.0.py target.com `
+  -t ./templates `
+  -sw wordlists/subs.txt `
+  -dw wordlists/dirs.txt `
+  --headless `
+  --chrome-path 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
+```
 -----
 
 ### 📐 Arsitektur Templat (Cara Menulis Templat)
