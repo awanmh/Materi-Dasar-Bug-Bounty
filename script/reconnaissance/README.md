@@ -27,26 +27,20 @@
 
 ---
 
-### 🌟 Fitur Utama
+### Fitur Utama
 
-* **Mesin Templat Canggih:** Tulis logika pemindaian Anda sendiri dalam file **YAML** atau **JSON**.
-* **Stateful & Resumable:** Menggunakan **SQLite** (`--resume`) untuk menyimpan dan melanjutkan pemindaian besar.
-* **Crawler Cerdas:**
-    * Mode **HTTP** (Cepat) & **Headless** (`--headless`) untuk aplikasi JavaScript-heavy (React/Vue/Angular).
-    * Penemuan *Endpoint* & *Parameter* (`GET` & `POST`).
-    * *Crawling* Rekursif (`-r`) untuk memetakan aplikasi secara dinamis.
-    * **[BARU] Technology Detection:** Mendeteksi framework, backend, dan database secara otomatis.
-* **Manajemen Sesi Otomatis:**
-    * Login otomatis (`--login-url`, `--login-data`).
-    * Validasi sesi berkelanjutan (`--auth-check-url`, `--auth-check-string`).
-    * Dukungan penuh untuk pemindaian terotentikasi (`--cookie`, `--header`).
-* **Template Chaining & Variables:** Ekstrak nilai (seperti token CSRF) dari satu *request* dan gunakan di *request* berikutnya.
-* **Payload Dictionaries:** Muat *wordlist* (misal: `passwords.txt`) di dalam templat untuk *brute-force*.
-* **Matcher & Extractor Canggih:**
-    * **Matchers:** `status`, `word`, `header`, `regex`, `binary` (hex).
-    * **Extractors:** `regex`, `css`, `xpath`, `json`.
-* **Penemuan Cerdas:** Deteksi *Wildcard DNS*, Analisis file `.js` untuk *endpoint* API.
-* **UX Modern:** *Output* berwarna, *progress bar* (`tqdm`), dan mode senyap (`--silent`).
+* **🧠 AI Neural Engine (BARU v17):** Menggunakan Google Gemini untuk menganalisis halaman web secara kontekstual dan memprediksi *path* tersembunyi (Context-Aware Scanning).
+* **🕵️ Hidden Asset Hunter:**
+    * **Source Maps:** Merekonstruksi kode sumber asli dari file `.js.map` yang bocor.
+    * **Broken Link Hijacking:** Mendeteksi tautan eksternal mati yang rentan diambil alih.
+* **☁️ Infrastructure Killer:**
+    * **Cloud Enumeration:** Menemukan bucket S3, Azure Blob, dan GCP publik.
+    * **Port Scanning:** Pemindaian port ringan untuk layanan non-HTTP.
+    * **Subdomain Takeover:** Deteksi otomatis kerentanan CNAME.
+* **🔌 API Hunter:** Parsing otomatis dokumentasi **Swagger/OpenAPI** dan serangan introspeksi **GraphQL**.
+* **📸 Visual Recon:** Pengambilan *screenshot* otomatis dalam mode *headless*.
+* **💎 Secret Scanning:** Pencarian otomatis API Key, Token, dan Kredensial di HTML & JS.
+* **🧩 Advanced Template Engine:** Logika deteksi kustom berbasis YAML/JSON dengan dukungan *Chaining* dan *Extraction*.
 
 ---
 
@@ -79,12 +73,13 @@ recon-v12/
     ├── database.py         # SQLite Handler (aiosqlite)
     ├── discovery.py      # Subdomain, Host, & WebCrawler (HTTP/Headless)
     ├── verification.py   # TemplateEngine, WafDetector
+    ├── ai_brain.py
     └── utils.py            # Helpers (Warna, ProgressBar, Loader YAML/JSON)
 ```
 
 -----
 
-### 🖥️ Instalasi & Setup
+### Instalasi & Setup
 
 Alat ini memerlukan **Python 3.8+**.
 
@@ -123,7 +118,7 @@ python -m venv venv
 Jalankan perintah ini untuk menginstal semua *library* yang diperlukan:
 
 ```bash
-pip install aiohttp aiodns tqdm pyppeteer aiosqlite PyYAML lxml beautifulsoup4
+pip install aiohttp aiodns tqdm pyppeteer aiosqlite PyYAML lxml beautifulsoup4 google-generativeai
 ```
 
 #### 4\. Setup Pyppeteer (Browser Headless)
@@ -132,6 +127,9 @@ Ini adalah langkah paling penting. Pyppeteer perlu mengunduh *binary* Chromium y
 
 ```bash
 pyppeteer-install
+# (Opsional) Set API Key Gemini di environment variable
+# Windows PowerShell:
+$env:GEMINI_API_KEY="AIzaSy..."
 ```
 
 *(Ini akan mengunduh file \~100-200MB. Jika gagal di Linux, Anda mungkin perlu menginstal dependensi tambahan: `sudo apt-get install -y libpangocairo-1.0-0 libx11-xcb1 ...`)*
@@ -145,7 +143,7 @@ pyppeteer-install
 
 -----
 
-### ⚙️ Usage (Argumen)
+### Usage (Argumen)
 
 Ini adalah *output* dari argumen yang tersedia.
 
@@ -193,84 +191,34 @@ Evasion & Filter:
 
 -----
 
-### 🚀 Skenario Penggunaan (Contoh)
+### Skenario Penggunaan (Real Cases)
 
-#### 1\. Pemindaian Standar (Cepat & Cerdas)
+Berikut adalah cara menggunakan alat ini untuk berbagai situasi bug bounty di dunia nyata.
 
-Menemukan subdomain, host, *endpoint* dari *wordlist*, dan menjalankan semua templat.
+**1. The Neural Scan (AI-Powered Discovery) - TERBARU**
 
-```bash
-python recon-v12.0.py example.com -sw wordlists/subs.txt -dw wordlists/dirs.txt -t ./templates/ -o ./scan-output -c 100
-```
-
-#### 2\. Pemindaian Aplikasi JavaScript (Headless & Rekursif)
-
-Sempurna untuk aplikasi React/Vue/Angular. Jauh lebih lambat tetapi jauh lebih teliti. Jika pyppeteer gagal mengunduh Chromium, gunakan `--chrome-path`.
+Gunakan ini untuk target yang kompleks di mana brute-force biasa gagal. AI akan membaca halaman utama dan menebak endpoint berdasarkan logika bisnis target.
 
 ```bash
-python recon-v12.0.py app.example.com \
-  -sw subs.txt -dw dirs.txt \
-  -t ./templates/ \
-  -o ./scan-output -c 10 \
-  --headless -r \
-  --chrome-path 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+python recon-v17.0.py target.com \
+  -t ./templates -sw wordlists/subs.txt -dw wordlists/dirs.txt \
+  -c 20 \
+  --ai \
+  --gemini-api "AIzaSyYourKeyHere..."
 ```
 
-#### 3\. Pemindaian Terotentikasi (Setelah Login)
+**2. The Hidden Asset Hunt (Mode Penuh)**
 
-Memindai area yang dilindungi login menggunakan cookie sesi Anda.
+Mode ini mengaktifkan Headless Browser untuk merender JavaScript. Wajib digunakan untuk aplikasi modern (SPA) guna menemukan Source Maps, Broken Links, dan DOM Secrets.
+
+Fitur aktif: Source Map, BLH, API Hunting, Cloud Buckets, Ports, Secrets, Screenshots, Wayback.
 
 ```bash
-python recon-v12.0.py dashboard.example.com \
-  -sw subs.txt -dw dirs.txt \
-  -t ./templates/ \
-  -b "session_id=abc123xyz789" \
-  --silent
-```
-
-#### 4\. Pemindaian dengan Auto-Login
-
-Alat ini akan login, memvalidasi sesi, dan otomatis login ulang jika sesi mati.
-
-```bash
-python recon-v12.0.py example.com -sw subs.txt -dw dirs.txt -t ./templates/ \
-    --login-url "https://example.com/login" \
-    --login-data "username=scanner&password=Password123" \
-    --auth-check-url "https://example.com/profile" \
-    --auth-check-string "Halaman Login"
-```
-
-#### 5\. Melanjutkan Pemindaian (Resume)
-
-Jika pemindaian 10 jam Anda gagal, Anda tidak perlu mengulang. Alat ini akan memuat temuan dari recon.db di folder output dan langsung melanjutkan ke Phase 4 (Assessment).
-
-```bash
-# Perhatikan --resume. Tidak perlu -sw atau -dw lagi.
-python recon-v12.0.py example.com -t ./templates/ -o ./scan-output --resume
-```
------
-#### Skenario Penggunaan (Command Examples)
-**Skenario A: "The Hidden Asset Hunt" (Mode Penuh v16)**
-Mode ini mengaktifkan Headless Browser untuk merender JavaScript. Ini wajib jika Anda ingin fitur Source Map Discovery dan Broken Link Hijacking bekerja maksimal (karena banyak link ada di dalam JS yang dirender).
-
-Fitur yang aktif:
-
-✅ Source Map Reconstruction (.js.map)
-
-✅ Broken Link Hijacking Check
-
-✅ API Hunting (Swagger/GraphQL)
-
-✅ Cloud Buckets & Ports
-
-✅ Secrets Scanning
-
-```PowerShell
-python recon-v16.0.py target.com `
+python recon-v17.0.py target.com `
   -t ./templates `
   -sw wordlists/subs.txt `
   -dw wordlists/dirs.txt `
-  -o ./hasil_scan_v16 `
+  -o ./hasil_scan_full `
   -c 10 `
   --headless `
   --screenshot `
@@ -279,79 +227,87 @@ python recon-v16.0.py target.com `
   --ports `
   --wayback
 ```
-*(Catatan: -c 10 digunakan agar browser headless tidak membebani CPU/RAM. Jika tanpa headless, Anda bisa pakai -c 50).*
 
-**Skenario B: Scan Cepat (HTTP Mode)**
-Jika Anda ingin cepat dan tidak peduli dengan render JS atau Screenshot. Fitur Source Map dan BLH tetap berjalan tapi hanya pada HTML statis.
+(Catatan: -c 10 digunakan agar browser headless tidak membebani CPU/RAM).
+
+**3. Pemindaian Standar (Mode Cepat/HTTP)**
+
+Jika Anda ingin hasil cepat dan tidak peduli dengan render JS atau Screenshot. Fitur Source Map dan BLH tetap berjalan tapi hanya pada HTML statis.
 
 ```bash
-python recon-v16.0.py target.com `
-  -t ./templates `
-  -sw wordlists/subs.txt `
-  -dw wordlists/dirs.txt `
-  -o ./hasil_cepat `
-  -c 50 `
+python recon-v17.0.py target.com \
+  -t ./templates \
+  -sw wordlists/subs.txt \
+  -dw wordlists/dirs.txt \
+  -o ./hasil_cepat \
+  -c 50 \
   --api
 ```
-**Skenario C: Mengatasi Masalah Pyppeteer (Chrome Path)**
-Jika Anda mendapatkan error Chromium downloadable not found, gunakan browser Chrome/Edge yang ada di laptop Anda.
+
+**4. Pemindaian Terotentikasi (Authenticated Recon)**
+
+Memindai area admin atau dashboard pengguna.
 
 ```bash
-python recon-v16.0.py target.com `
-  -t ./templates `
-  -sw wordlists/subs.txt `
-  -dw wordlists/dirs.txt `
-  --headless `
+python recon-v17.0.py app.target.com \
+  -t ./templates -sw wordlists/subs.txt -dw wordlists/dirs.txt \
+  --headless \
+  -b "session_id=YOUR_COOKIE_HERE" \
+  --auth-check-url "https://app.target.com/api/user/me" \
+  --auth-check-string "Unauthenticated"
+```
+
+**5. Melanjutkan Pemindaian (Resume)**
+Jika pemindaian besar terhenti di tengah jalan, lanjutkan tanpa kehilangan data.
+
+```bash
+# Tidak perlu wordlist lagi, data dimuat dari recon.db
+python recon-v17.0.py target.com -o ./hasil_scan_full --resume
+```
+
+**6. Mengatasi Masalah Pyppeteer (Custom Chrome Path)**
+
+Jika Anda mendapatkan error Chromium downloadable not found atau koneksi lambat saat mengunduh browser.
+
+```bash
+python recon-v17.0.py target.com \
+  -t ./templates -sw wordlists/subs.txt -dw wordlists/dirs.txt \
+  --headless \
   --chrome-path 'C:\Program Files\Google\Chrome\Application\chrome.exe'
 ```
 
+####  Arsitektur Templat (Cara Menulis Serangan)
+
+Anda dapat menulis logika serangan kustom dalam format YAML.
+
+Contoh: `templates/cve-check.yaml`.
+
 ```bash
-python recon-v16.0.py target.com `
-  -t ./templates `
-  -sw wordlists/subs.txt `
-  -dw wordlists/dirs.txt `
-  --headless `
-  --chrome-path 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
-```
------
-
-### 📐 Arsitektur Templat (Cara Menulis Templat)
-
-Ini adalah inti dari engine. Templat adalah file **YAML** (atau JSON) yang mendefinisikan *request* dan *matcher*.
-
-Contoh `templates/basic-check.yaml`:
-
-```text
-id: nama-templat-unik
+id: cve-2024-xxxx-check
 info:
-  name: "Deskripsi Templat"
-  severity: "high"
+  name: "Critical Auth Bypass Check"
+  severity: "critical"
 target: "host" 
 
 requests:
+  # Request 1: Coba bypass login
   - method: "POST"
-    path: "{{base_url}}/login"
+    path: "{{base_url}}/api/login"
+    body: '{"user":"admin","bypass":true}'
     
-    # --- PAYLOADS ---
-    payload: "<test-payload-{{rand}}>"
-    # ATAU gunakan file:
-    # payload_file: "wordlists/passwords.txt"
-    
-    body: "user=admin&pass={{payload}}"
-    
-    # --- EXTRACTORS (Variables) ---
+    # Ekstrak token jika berhasil
     extractors:
-      - type: "regex" 
-        part: "body" 
-        regex: "name=\"_token\" value=\"(.*?)\""
-        name: "csrf_token" # Disimpan sebagai {{csrf_token}}
+      - type: "json" 
+        jsonpath: "token"
+        name: "auth_token"
 
-  - method: "POST"
-    # Menggunakan variabel dari request sebelumnya
-    path: "{{base_url}}/admin/delete?_token={{csrf_token}}"
-    body: "id=1"
+  # Request 2: Gunakan token untuk akses admin (Chaining)
+  - method: "GET"
+    path: "{{base_url}}/api/admin/users"
+    headers:
+      Authorization: "Bearer {{auth_token}}"
     
-    # --- MATCHERS (Kondisi Temuan) ---
+    # Validasi keberhasilan
     matchers_condition: "and"
     matchers:
       - type: "status"
@@ -359,7 +315,6 @@ requests:
       - type: "word"
         part: "body"
         words:
-          - "Success"
-          - "Deleted"
-        condition: "or"
+          - "users_list"
+          - "admin_role"
 ```
