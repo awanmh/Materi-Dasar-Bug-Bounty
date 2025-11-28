@@ -1,10 +1,12 @@
 ```markdown
- \ \      / /__| | ___| | | | ___  ___| |_(_) |_| | | (_) ___  _ __  
-  \ \ /\ / / _ \ |/ _ \ |_| |/ _ \/ __| __| | __| | | | |/ _ \| '_ \ 
-   \ V  V /  __/ |  __/  _  |  __/\__ \ |_| | |_| | |_| | (_) | | | |
-    \_/\_/ \___|_|\___|_| |_|\___||___/\__|_|\__|_|\___/ \___/|_| |_|
+   ██████╗   ███████╗  ██╗  ██╗
+  ██╔═══     ██╔════╝  ╚██╗██╔╝
+  ██║        ███████╗   ╚███╔╝ 
+  ██║        ╚════██║   ██╔██╗ 
+  ╚██████╔╝  ███████║  ██╔╝ ██╗
+   ╚═════╝   ╚══════╝  ╚═╝  ╚═╝
 ```
-## Web Vulnerability Platform (V7.0)
+# Web Vulnerability Platform (V7.0)
 
 Ini adalah platform pemindaian kerentanan web modular yang dapat diperluas, dirancang untuk skalabilitas dan deteksi mendalam. Proyek ini berevolusi dari skrip sederhana menjadi framework berbasis plugin yang menggunakan arsitektur hibrida (requests + selenium) dan infrastruktur ter-container (Docker).
 
@@ -24,23 +26,125 @@ V7.0 dirancang untuk memisahkan Logika Inti dari Logika Keamanan:
 
 ### Fitur Utama
 ---
-- Arsitektur Plugin: Mudah diperluas. Cukup tambahkan file `.py` baru di folder `plugins/` untuk menambahkan jenis pemindaian baru.
+**1. Arsitektur Inti (Core Architecture)**
 
-- Deteksi Hibrida:
+- Modular Plugin System: Menggunakan arsitektur berbasis plugin. Menambah jenis serangan baru cukup dengan menambahkan satu file `.py` di folder `plugins/` tanpa mengubah kode inti.
 
-    - Fase 1 (Cepat): Crawling dan pemindaian server-side (Reflected XSS, SQLi, SSRF) menggunakan `requests` secara multi-thread.
+- **Hybrid Engine (Fase Ganda):**
 
-    - Fase 2 (Dalam): Pemindaian client-side (DOM-based XSS) menggunakan `Selenium Grid` secara paralel.
+    - Fase 1 (Fast Scan): Menggunakan `requests` dan `multi-threading` untuk crawling cepat dan serangan server-side (SQLi, SSRF, RCE).
 
-- Deteksi Canggih:
+    - Fase 2 (Deep Scan): Menggunakan `Selenium Grid` untuk mengeksekusi JavaScript di browser asli secara paralel guna menemukan kerentanan client-side (DOM XSS).
 
-    - SSRF: Deteksi out-of-band (OAST) yang akurat menggunakan `Interact.sh`.
+- **Infrastructure-as-Code:** Sepenuhnya ter-containerisasi menggunakan **Docker** dan **Docker Compose**. Memisahkan "otak" (Python) dari "otot" (Browser Chrome Nodes).
 
-    - DOM XSS: Pengujian multi-vektor (URL Hash, LocalStorage, Window.name) yang dijalankan secara paralel.
+    - Anti-Stuck & Resilience: Dilengkapi mekanisme Drain Mode dan Retry Logic. Jika Selenium Grid crash atau penuh, scanner tidak akan macet (hang), melainkan melewati tugas tersebut dan melanjutkan ke pelaporan.
 
-- Manajemen Dependensi: Dikemas penuh dalam `Docker`, menghilangkan masalah "works on my machine" dan konflik dependensi.
+**2. Fitur Operasional & Kontrol**
 
-- Skalabilitas: Pemindaian DOM XSS dapat dipercepat dengan mudah dengan menambah jumlah node browser di Selenium Grid.
+- **AI-Powered Scanning (V11.0):**
+
+    - Terintegrasi dengan OpenAI API (`--openai-key`).
+
+    - Context-Aware Attacks: AI menganalisis potongan kode HTML target untuk membuat payload spesifik yang mampu mem-bypass filter WAF, alih-alih melakukan brute-force.
+
+- **Stealth Mode (V8.0):**
+
+    - Opsi `--stealth` untuk menghindari deteksi WAF/IPS.
+
+    - Fitur: Rotasi User-Agent acak, Jitter (jeda waktu acak antar request), dan penyamaran header HTTP.
+
+- **Manual Injection (Repeater Mode):**
+
+    - Dukungan argumen `--method` dan `--data` untuk menargetkan satu endpoint API spesifik tanpa perlu crawling.
+
+- **Selective Scanning:**
+
+    - Opsi `--plugin-ids` untuk menjalankan hanya plugin tertentu (misal: hanya cek SSRF dan CORS).
+
+- Safety Limits:
+
+    - Opsi `--max-pages` untuk mencegah looping tak terbatas pada situs besar.
+
+**3. Arsenal Serangan (Daftar Plugin)**
+
+Scanner ini dilengkapi dengan lebih dari 30 plugin serangan yang mencakup kategori High-Impact, Modern Web, dan Infrastructure.
+
+- **A. Kategori Injection & RCE (Critical)**
+
+    1. **Command Injection (RCE):** Menyuntikkan perintah OS (`curl`, `nslookup`) via OAST.
+
+    2. **Log4Shell Hunter:** Mendeteksi kerentanan JNDI Injection yang mematikan pada server Java.
+
+    3. **SSTI (Server-Side Template Injection):** Mendeteksi eksekusi kode pada template engine (Jinja2, Twig, dll) menggunakan polyglot matematika.
+
+    4. **SQL Injection (Time-Based):** Mendeteksi Blind SQLi dengan mengukur delay respons server.
+
+    5. **NoSQL Injection:** Membypass autentikasi pada database MongoDB/NoSQL menggunakan payload JSON (`$ne`).
+
+    6. **Insecure Deserialization:** Mendeteksi objek serialisasi berbahaya pada Java, PHP, dan Python.
+
+- **B. Kategori Modern Web & API**
+
+    1. **LLM Prompt Injection:** Menyerang fitur AI Chatbot untuk membocorkan System Prompt.
+
+    2. **Server-Side Prototype Pollution (SSPP):** Menyerang backend Node.js dengan mencemari objek prototype JSON.
+
+    3. **Client-Side Prototype Pollution:** Mendeteksi pencemaran objek global window di browser (DOM).
+
+    4. **GraphQL Introspection:** Mencoba membocorkan seluruh skema database API GraphQL.
+
+    5. **CORS Misconfiguration:** Mendeteksi konfigurasi Cross-Origin yang mengizinkan pencurian data kredensial.
+
+    6. **JWT None Algorithm:** Mencoba memalsukan token admin dengan menghapus tanda tangan digital.
+
+- **C. Kategori Infrastruktur & Cloud**
+
+    1. **Cloud Metadata Stealer:** Mencoba mencuri kredensial IAM Role dari AWS, GCP, dan Azure via SSRF.
+
+    2. **Subdomain Takeover:** Mendeteksi subdomain yang menunjuk ke layanan cloud yang sudah ditinggalkan (S3, Heroku).
+
+    3. **Firebase Database Takeover:** Mendeteksi database Firebase yang terbuka untuk publik (`.json`).
+
+    4. **Spring Boot Actuator Hunter:** Mencari endpoint debug Java yang terbuka (`/heapdump`, `/env`) yang membocorkan password/key.
+
+    5. **Sensitive File Hunter:** Mencari sisa file `.git`, `.env`, dan backup database.
+
+- **D. Kategori Protokol & Logika**
+
+    1. **SSRF (Blind OAST):** Mendeteksi Server-Side Request Forgery menggunakan interaksi luar jalur *(Out-of-Band)* via Interact.sh.
+
+    2. **XXE (XML External Entity):** Menyuntikkan entitas XML jahat untuk membaca file server atau SSRF.
+
+    3. **HTTP Request Smuggling (Timing):** Mendeteksi desinkronisasi antara frontend dan backend server.
+
+    4. **Host Header Injection:** Mencoba meracuni cache atau link reset password via manipulasi header Host.
+
+    5. **Race Condition Hunter:** Mengirim request paralel serentak untuk mengeksploitasi celah logika transaksi (misal: kupon ganda).
+
+    6. **403/401 Bypass:** Mencoba menembus halaman admin dengan memanipulasi header (`X-Forwarded-For`, `X-Original-URL`).
+
+    7. **Web Cache Deception:** Memanipulasi ekstensi URL untuk menipu CDN agar menyimpan halaman sensitif pengguna.
+
+    8. **CRLF Injection:** Mencoba memecah respons HTTP untuk menyuntikkan cookie palsu atau XSS.
+
+- **E. Kategori XSS & Client-Side**
+
+    1. **Reflected XSS:** Mendeteksi pantulan input berbahaya di HTML.
+
+    2. **AI-Driven XSS:** Menggunakan AI untuk membuat payload XSS yang lolos filter berdasarkan konteks kode.
+
+    3. **DOM XSS:** Mendeteksi eksekusi JavaScript berbahaya di sisi klien (mendukung source dari URL Hash, LocalStorage, Window.name).
+
+    4. **JS Secrets Scanner:** Mengekstrak API Key (AWS, Google) dan endpoint tersembunyi dari file JavaScript statis.
+
+**4. Pelaporan (Reporting)**
+
+- **JSON Report:** Hasil scan disimpan dalam format JSON terstruktur yang mudah diolah.
+
+- **Kategorisasi Risiko:** Temuan dikelompokkan berdasarkan tingkat keparahan (CRITICAL, HIGH, MEDIUM, LOW, INFO).
+
+- **Bukti (Evidence):** Menyertakan URL target, deskripsi kerentanan, dan payload yang berhasil digunakan.
 
 ### Prasyarat
 ---
@@ -69,6 +173,7 @@ scanner-v7/
 │   ├── plugin_loader.py     # Logika untuk mencari & mengimpor file dari folder 'plugins/'
 │   ├── selenium_driver.py   # Berisi konfigurasi ChromeOptions agar kode lebih bersih
 │   ├── stealth_session.py   # Rotasi User-Agent, Jitter, Header palsu agar terlihat seperti manusia.
+│   ├── ai_engine.py         # .
 │   L── result_manager.py    # Mengelola pencatatan, agregasi, & pelaporan hasil
 |
 ├── plugins/                 # [PLUGIN] Berisi semua logika deteksi kerentanan.
@@ -84,7 +189,7 @@ scanner-v7/
 │   ├── plugin_jwt_attack.py # Plugin #9: Mengubah algoritma tanda tangan JWT menjadi None.
 │   ├── plugin_nosqli.py     # Plugin #10: Mengirim payload JSON ({"$ne": null}) utk manipulasi logic query login.
 │   ├── plugin_proto_pollution.py # Plugin #11: Mencoba mencemari Object.prototype lewat URL dan cek dampak.
-│   ├── plugin_race_condition.py # Plugin #12:Mengirim 10 request yang sama secara bersamaan (paralel).
+│   ├── plugin_race_condition.py  # Plugin #12:Mengirim 10 request yang sama secara bersamaan (paralel).
 │   ├── plugin_sensitive_files.py # Plugin #13: Brute-force mencari file .git, .env, atau backup .sql
 │   ├── plugin_ssti.py       # Plugin #14: Mengirim operasi matematika untuk mengetahui Remote Code Execution.
 │   ├── plugin_takeover.py   # Plugin #15: Mengecek pesan error spesifik (misal "NoSuchBucket")
@@ -95,13 +200,14 @@ scanner-v7/
 │   ├── plugin_log4shell.py  # Plugin #20: Menyuntikkan payload JNDI (${jndi:ldap://oast...}) ke semua header HTTP dan parameter.
 │   ├── plugin_403_bypass.py # Plugin #21: Mencari parameter URL dan menggantinya dengan endpoint metadata cloud spesifik.
 │   ├── plugin_cloud_metadata.py  # Plugin #22: Mendeteksi halaman 403/401, lalu membombardir dengan header bypass dan variasi URL.
-│   ├── plugin_llm_injection.py  # Plugin #23: Mengirimkan perintah "Jailbreak" ke setiap input teks (chat, search, comments)
+│   ├── plugin_llm_injection.py   # Plugin #23: Mengirimkan perintah "Jailbreak" ke setiap input teks (chat, search, comments)
 │   ├── plugin_deserialization.py # Plugin #24: Mendeteksi format serialisasi (Base64 Java, PHP serialized string, Python Pickle).
 │   ├── plugin_sspp.py       # Plugin #25: Mengirim payload JSON yang mencoba mencemari properti __proto__.
 │   ├── plugin_wcd.py        # Plugin #26: Celah ini memanfaatkan cara kerja CDN (Content Delivery Network).
 │   ├── plugin_firebase.py   # Plugin #27: Kebocoran data pengguna (email, chat, token) atau penghapusan database total.
 │   ├── plugin_request_smuggling.py  # Plugin #28: Kita mengirim request yang sengaja dibuat ambigu.
-│   L── plugin_ssrf_oast.py  # Plugin #29: Tes SSRF OAST (Fase 1, Requests).
+│   ├── plugin_ai_xss.py     # Plugin #29: .
+│   L── plugin_ssrf_oast.py  # Plugin #30: Tes SSRF OAST (Fase 1, Requests).
 |
 L── reports/                 # [OUTPUT] Laporan JSON akan disimpan di sini.
     L── .gitkeep             # File placeholder agar folder ini tetap ada di Git
@@ -167,6 +273,11 @@ docker-compose run --rm scanner "[http://test-target.com](http://test-target.com
     --dom-xss \
     --dom-threads 8 \
     -o "test-target.json"
+```
+
+**Contoh 4: Menjalankan dengan Key**
+```bash
+docker-compose run --rm scanner "https://target.com" --openai-key "sk-proj-....."
 ```
 
 **3. Mengakses Laporan**
@@ -254,4 +365,3 @@ class LFIPlugin(BasePlugin):
 3. Selesai.
 
 Itu saja. Anda tidak perlu mengedit `scanner_v7.py` atau file `core/` apa pun. `plugin_loader` akan secara otomatis menemukan, mengimpor, dan menjalankan plugin baru Anda pada pemindaian berikutnya.
-
